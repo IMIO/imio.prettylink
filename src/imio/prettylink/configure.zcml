@@ -6,5 +6,9 @@
     i18n_domain="imio.prettylink">
 
     <five:registerPackage package="." initialize=".initialize" />
-    
+
+    <adapter for="OFS.interfaces.IItem"
+             factory=".adapters.PrettyLinkAdapter"
+             provides=".interfaces.IPrettyLinkify" />
+
 </configure>
