@@ -1,0 +1,11 @@
+graft src/imio
+graft buildout.d
+graft docs/
+include *.cfg *.rst *.in
+include *.py
+include .coveragerc
+include .travis.yml
+include Makefile
+global-exclude *.pyc
+recursive-include docs *.GPL
+recursive-include docs *.rst
