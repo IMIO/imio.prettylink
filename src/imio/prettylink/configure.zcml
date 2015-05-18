@@ -9,6 +9,6 @@
 
     <adapter for="OFS.interfaces.IItem"
              factory=".adapters.PrettyLinkAdapter"
-             provides=".interfaces.IPrettyLinkify" />
+             provides=".interfaces.IPrettyLink" />
 
 </configure>

@@ -3,7 +3,7 @@
 from zope.interface import Interface
 
 
-class IPrettyLinkify(Interface):
+class IPrettyLink(Interface):
     """ """
 
     def getLink(self):
