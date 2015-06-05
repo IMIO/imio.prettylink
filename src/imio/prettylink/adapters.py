@@ -65,10 +65,10 @@ class PrettyLinkAdapter(object):
             return u"{0} <a class='{1}' title='{2}' href='{3}' target='{4}'>{5}</a>" \
                    .format(icons,
                            self.CSSClasses(),
-                           self.tag_title,
+                           safe_unicode(self.tag_title),
                            url,
                            self.target,
-                           content)
+                           safe_unicode(content))
         else:
             # display the notViewableHelpMessage if any
             content = self.notViewableHelpMessage and \
@@ -77,9 +77,9 @@ class PrettyLinkAdapter(object):
             return u"{0} <div class='{1}' title='{2}'>{3}</div>" \
                    .format(icons,
                            self.CSSClasses(),
-                           self.tag_title,
-                           content,
-                           self.notViewableHelpMessage)
+                           safe_unicode(self.tag_title),
+                           safe_unicode(content),
+                           safe_unicode(self.notViewableHelpMessage))
 
     def CSSClasses(self):
         """See docstring in interfaces.py."""
