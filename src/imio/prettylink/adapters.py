@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from zope.i18n import translate
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 
 
 class PrettyLinkAdapter(object):
@@ -61,22 +62,19 @@ class PrettyLinkAdapter(object):
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
             url = self.context.absolute_url() + self.appendToUrl
-            try:
-                return "{0} <a class='{1}' title='{2}' href='{3}' target='{4}'>{5}</a>" \
-                       .format(icons,
-                               self.CSSClasses(),
-                               self.tag_title,
-                               url,
-                               self.target,
-                               content)
-            except:
-                import ipdb; ipdb.set_trace()
+            return u"{0} <a class='{1}' title='{2}' href='{3}' target='{4}'>{5}</a>" \
+                   .format(icons,
+                           self.CSSClasses(),
+                           self.tag_title,
+                           url,
+                           self.target,
+                           content)
         else:
             # display the notViewableHelpMessage if any
             content = self.notViewableHelpMessage and \
                 ("{0} {1}".format(content, self.notViewableHelpMessage)) or \
                 content
-            return "{0} <div class='{1}' title='{2}'>{3}</div>" \
+            return u"{0} <div class='{1}' title='{2}'>{3}</div>" \
                    .format(icons,
                            self.CSSClasses(),
                            self.tag_title,
@@ -109,11 +107,11 @@ class PrettyLinkAdapter(object):
             if self.context.wl_isLocked():
                 icons.append(("lock_icon.png", translate("Locked", domain="plone", context=self.request)))
 
-        # in case the contentIcon must be shown and it the icon url is defined on the typeInfo
+        # in case the contentIcon must be shown, the icon url is defined on the typeInfo
         if self.showContentIcon:
             typeInfo = getToolByName(self, 'portal_type')[self.context.portal_type]
             if typeInfo.icon_expr:
-                # we asume that stored icon_expr is like string:${portal_url}/myContentIcon.png
+                # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
                 contentIcon = typeInfo.icon_expr.split('/')[-1]
                 icons.append(contentIcon, translate(typeInfo.title,
                                                     doamin=typeInfo.i18n_domain,
@@ -121,7 +119,8 @@ class PrettyLinkAdapter(object):
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join(["<img title='{0}' src='{1}' />".format(icon[1].encode('utf-8'), u"{0}/{1}".format(self.portal_url, icon[0]))
+        return ' '.join([u"<img title='{0}' src='{1}' />".format(safe_unicode(icon[1]),
+                                                                 "{0}/{1}".format(self.portal_url, icon[0]))
                          for icon in icons])
 
     def _leadingIcons(self):
