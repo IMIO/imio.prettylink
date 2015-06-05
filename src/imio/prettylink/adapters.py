@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from zope.i18n import translate
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 
 
 class PrettyLinkAdapter(object):
@@ -106,11 +107,11 @@ class PrettyLinkAdapter(object):
             if self.context.wl_isLocked():
                 icons.append(("lock_icon.png", translate("Locked", domain="plone", context=self.request)))
 
-        # in case the contentIcon must be shown and it the icon url is defined on the typeInfo
+        # in case the contentIcon must be shown, the icon url is defined on the typeInfo
         if self.showContentIcon:
             typeInfo = getToolByName(self, 'portal_type')[self.context.portal_type]
             if typeInfo.icon_expr:
-                # we asume that stored icon_expr is like string:${portal_url}/myContentIcon.png
+                # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
                 contentIcon = typeInfo.icon_expr.split('/')[-1]
                 icons.append(contentIcon, translate(typeInfo.title,
                                                     doamin=typeInfo.i18n_domain,
@@ -118,7 +119,8 @@ class PrettyLinkAdapter(object):
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join(["<img title='{0}' src='{1}' />".format(icon[1], "{0}/{1}".format(self.portal_url, icon[0]))
+        return ' '.join([u"<img title='{0}' src='{1}' />".format(safe_unicode(icon[1]),
+                                                                 "{0}/{1}".format(self.portal_url, icon[0]))
                          for icon in icons])
 
     def _leadingIcons(self):
