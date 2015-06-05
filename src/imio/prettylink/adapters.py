@@ -53,7 +53,7 @@ class PrettyLinkAdapter(object):
 
     def getLink(self):
         """See docstring in interfaces.py."""
-        content = self.contentValue or unicode(self.context.Title(), 'utf-8')
+        content = self.contentValue or self.context.Title()
         if self.maxLength:
             plone_view = self.context.restrictedTraverse('@@plone')
             ellipsis = self.kwargs.get('ellipsis', '...')
@@ -61,19 +61,22 @@ class PrettyLinkAdapter(object):
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
             url = self.context.absolute_url() + self.appendToUrl
-            return u"{0} <a class='{1}' title='{2}' href='{3}' target='{4}'>{5}</a>" \
-                   .format(icons,
-                           self.CSSClasses(),
-                           self.tag_title,
-                           url,
-                           self.target,
-                           content)
+            try:
+                return "{0} <a class='{1}' title='{2}' href='{3}' target='{4}'>{5}</a>" \
+                       .format(icons,
+                               self.CSSClasses(),
+                               self.tag_title,
+                               url,
+                               self.target,
+                               content)
+            except:
+                import ipdb; ipdb.set_trace()
         else:
             # display the notViewableHelpMessage if any
             content = self.notViewableHelpMessage and \
                 ("{0} {1}".format(content, self.notViewableHelpMessage)) or \
                 content
-            return u"{0} <div class='{1}' title='{2}'>{3}</div>" \
+            return "{0} <div class='{1}' title='{2}'>{3}</div>" \
                    .format(icons,
                            self.CSSClasses(),
                            self.tag_title,
@@ -118,7 +121,7 @@ class PrettyLinkAdapter(object):
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join(["<img title='{0}' src='{1}' />".format(icon[1], "{0}/{1}".format(self.portal_url, icon[0]))
+        return ' '.join(["<img title='{0}' src='{1}' />".format(icon[1].encode('utf-8'), u"{0}/{1}".format(self.portal_url, icon[0]))
                          for icon in icons])
 
     def _leadingIcons(self):
