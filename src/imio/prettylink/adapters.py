@@ -50,7 +50,7 @@ class PrettyLinkAdapter(object):
             'can_not_access_this_element',
             domain="imio.prettylink",
             context=self.request,
-            default="<span class='discreet'>(You can not access this element)</span>").encode('utf-8')
+            default=u"<span class='discreet'>(You can not access this element)</span>")
 
     def getLink(self):
         """See docstring in interfaces.py."""
@@ -72,7 +72,7 @@ class PrettyLinkAdapter(object):
         else:
             # display the notViewableHelpMessage if any
             content = self.notViewableHelpMessage and \
-                ("{0} {1}".format(content, self.notViewableHelpMessage)) or \
+                (u"{0} {1}".format(content, self.notViewableHelpMessage)) or \
                 content
             return u"{0} <div class='{1}' title='{2}'>{3}</div>" \
                    .format(icons,
