@@ -62,28 +62,28 @@ class PrettyLinkAdapter(object):
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
             url = self.context.absolute_url() + self.appendToUrl
-            return u"{0} <a class='{1}' title='{2}' href='{3}' target='{4}'>{5}</a>" \
-                   .format(icons,
-                           self.CSSClasses(),
+            return u"<a class='{0}' title='{1}' href='{2}' target='{3}'><span class='pretty_link_icons'>{4}</span><span class='pretty_link_content'>{5}</span></a>" \
+                   .format(self.CSSClasses(),
                            safe_unicode(self.tag_title),
                            url,
                            self.target,
+                           icons,
                            safe_unicode(content))
         else:
             # display the notViewableHelpMessage if any
             content = self.notViewableHelpMessage and \
                 (u"{0} {1}".format(content, self.notViewableHelpMessage)) or \
                 content
-            return u"{0} <div class='{1}' title='{2}'>{3}</div>" \
-                   .format(icons,
-                           self.CSSClasses(),
+            return u"<div class='{0}' title='{1}'><span class='pretty_link_icons'>{2}</span><span class='pretty_link_content'>{3}</span></div>" \
+                   .format(self.CSSClasses(),
                            safe_unicode(self.tag_title),
-                           safe_unicode(content),
-                           safe_unicode(self.notViewableHelpMessage))
+                           icons,
+                           safe_unicode(content))
 
     def CSSClasses(self):
         """See docstring in interfaces.py."""
         css_classes = list(self.additionalCSSClasses)
+        css_classes.insert(0, 'pretty_link')
         if self.showColors:
             wft = getToolByName(self.context, 'portal_workflow')
             css_classes.append('state-{0}'.format(wft.getInfoFor(self.context, 'review_state')))
