@@ -62,22 +62,24 @@ class PrettyLinkAdapter(object):
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
             url = self.context.absolute_url() + self.appendToUrl
-            return u"<a class='{0}' title='{1}' href='{2}' target='{3}'><span class='pretty_link_icons'>{4}</span><span class='pretty_link_content'>{5}</span></a>" \
+            icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
+            return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}<span class='pretty_link_content'>{5}</span></a>" \
                    .format(self.CSSClasses(),
                            safe_unicode(self.tag_title),
                            url,
                            self.target,
-                           icons,
+                           icons_tag,
                            safe_unicode(content))
         else:
             # display the notViewableHelpMessage if any
             content = self.notViewableHelpMessage and \
                 (u"{0} {1}".format(content, self.notViewableHelpMessage)) or \
                 content
-            return u"<div class='{0}' title='{1}'><span class='pretty_link_icons'>{2}</span><span class='pretty_link_content'>{3}</span></div>" \
+            icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
+            return u"<div class='{0}' title='{1}'>{2}<span class='pretty_link_content'>{3}</span></div>" \
                    .format(self.CSSClasses(),
                            safe_unicode(self.tag_title),
-                           icons,
+                           icons_tag,
                            safe_unicode(content))
 
     def CSSClasses(self):
