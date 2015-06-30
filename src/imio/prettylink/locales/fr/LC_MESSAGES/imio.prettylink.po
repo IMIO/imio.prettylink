@@ -16,4 +16,4 @@ msgstr ""
 
 #. Default: "<span class='discreet'>(You can not access this element)</span>"
 msgid "can_not_access_this_element"
-msgstr "<span class='discreet'>(Vous ne pouvez pas accéder à cet élément)</span>"
+msgstr "<span class='discreet'>(Vous n'avez pas accès à cet élément)</span>"
