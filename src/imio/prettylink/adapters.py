@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from zope.i18n import translate
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 
@@ -88,7 +89,11 @@ class PrettyLinkAdapter(object):
         css_classes.insert(0, 'pretty_link')
         if self.showColors:
             wft = getToolByName(self.context, 'portal_workflow')
-            css_classes.append('state-{0}'.format(wft.getInfoFor(self.context, 'review_state')))
+            try:
+                css_classes.append('state-{0}'.format(wft.getInfoFor(self.context, 'review_state')))
+            except WorkflowException:
+                # if self.context does not have a workflow, just pass
+                pass
         # in case the contentIcon must be shown and it the icon
         # is shown by the generated contentttype-xxx class
         if self.showContentIcon:

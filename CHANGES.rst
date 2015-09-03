@@ -4,7 +4,8 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- When using 'showColors', do not fail if element has no workflow.
+  [gbastien]
 
 
 1.0 (2015-07-14)
