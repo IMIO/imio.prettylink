@@ -83,4 +83,3 @@ class IntegrationTestCase(unittest.TestCase):
         super(IntegrationTestCase, self).setUp()
         self.portal = self.layer['portal']
         self.catalog = self.portal.portal_catalog
-
