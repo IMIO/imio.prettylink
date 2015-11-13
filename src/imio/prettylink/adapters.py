@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from zope.i18n import translate
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFCore.utils import getToolByName
+from plone import api
 from Products.CMFPlone.utils import safe_unicode
 
 
@@ -24,7 +24,7 @@ class PrettyLinkAdapter(object):
                  **kwargs):
         self.context = context
         self.request = self.context.REQUEST
-        self.portal_url = getToolByName(self.context, 'portal_url').getPortalObject().absolute_url()
+        self.portal_url = api.portal.get_tool('portal_url').getPortalObject().absolute_url()
         # we set parameters in the init so it it reusable across every methods
         self.showColors = showColors
         self.showIcons = showIcons
@@ -64,7 +64,8 @@ class PrettyLinkAdapter(object):
         if self.isViewable:
             url = self.context.absolute_url() + self.appendToUrl
             icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
-            return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}<span class='pretty_link_content'>{5}</span></a>" \
+            return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}" \
+                   u"<span class='pretty_link_content'>{5}</span></a>" \
                    .format(self.CSSClasses(),
                            safe_unicode(self.tag_title),
                            url,
@@ -88,7 +89,7 @@ class PrettyLinkAdapter(object):
         css_classes = list(self.additionalCSSClasses)
         css_classes.insert(0, 'pretty_link')
         if self.showColors:
-            wft = getToolByName(self.context, 'portal_workflow')
+            wft = api.portal.get_tool('portal_workflow')
             try:
                 css_classes.append('state-{0}'.format(wft.getInfoFor(self.context, 'review_state')))
             except WorkflowException:
@@ -97,8 +98,8 @@ class PrettyLinkAdapter(object):
         # in case the contentIcon must be shown and it the icon
         # is shown by the generated contentttype-xxx class
         if self.showContentIcon:
-            typeInfo = getToolByName(self.context, 'portal_types')[self.context.portal_type]
-            if not typeInfo.iconExpr:
+            typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
+            if not typeInfo.icon_expr:
                 css_classes.append('contenttype-{0}'.format(typeInfo.getId()))
         return ' '.join(css_classes)
 
@@ -116,13 +117,14 @@ class PrettyLinkAdapter(object):
 
         # in case the contentIcon must be shown, the icon url is defined on the typeInfo
         if self.showContentIcon:
-            typeInfo = getToolByName(self, 'portal_type')[self.context.portal_type]
+            typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
             if typeInfo.icon_expr:
                 # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
                 contentIcon = typeInfo.icon_expr.split('/')[-1]
-                icons.append(contentIcon, translate(typeInfo.title,
-                                                    doamin=typeInfo.i18n_domain,
-                                                    context=self.request))
+                icons.append((contentIcon,
+                              translate(typeInfo.title,
+                                        domain=typeInfo.i18n_domain,
+                                        context=self.request)))
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
