@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2 (unreleased)
+1.2 (2016-02-16)
 ----------------
 
 - If 'isViewable' is True (default), check that current user have
