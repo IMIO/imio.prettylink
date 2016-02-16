@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from zope.i18n import translate
-from Products.CMFCore.WorkflowCore import WorkflowException
 from plone import api
+from Products.CMFCore.permissions import View
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
 
 
@@ -47,6 +49,11 @@ class PrettyLinkAdapter(object):
         # actually not reachable by current user...  In this case, we display
         # a <div> to the element with a help message...
         self.isViewable = isViewable
+        # we may force isViewable to False even if user has the 'View' permission
+        # on it, but if isViewable is True, we check if target is really viewable
+        if isViewable:
+            if not _checkPermission(View, self.context):
+                self.isViewable = False
         self.notViewableHelpMessage = translate(
             'can_not_access_this_element',
             domain="imio.prettylink",
@@ -55,7 +62,7 @@ class PrettyLinkAdapter(object):
 
     def getLink(self):
         """See docstring in interfaces.py."""
-        content = self.contentValue or self.context.Title()
+        content = safe_unicode(self.contentValue or self.context.Title())
         if self.maxLength:
             plone_view = self.context.restrictedTraverse('@@plone')
             ellipsis = self.kwargs.get('ellipsis', '...')

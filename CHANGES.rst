@@ -4,8 +4,10 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- If 'isViewable' is True (default), check that current user have
+  'View' on the linked element, if it is forced to False, leave it False.
+  This way, 'View' check to linked element is managed by imio.prettylink.
+  [gbastien]
 
 1.1 (2015-11-13)
 ----------------
