@@ -4,8 +4,9 @@ Changelog
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Make sure quotes used in title are not breaking formatted strings,
+  we escape it by replacing quotes by it's HTML entity &#39;
+  [gbastien]
 
 1.2 (2016-02-16)
 ----------------

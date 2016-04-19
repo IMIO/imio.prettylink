@@ -34,8 +34,8 @@ class PrettyLinkAdapter(object):
         self.showLockedIcon = showLockedIcon
         # value to use for the link, if not given, object's title will be used
         self.contentValue = contentValue
-        # arbitrary tag_title
-        self.tag_title = tag_title
+        # arbitrary tag_title, escape quotes
+        self.tag_title = tag_title.replace("'", "&#39;")
         # truncate link content to given maxLength if any
         self.maxLength = maxLength
         # target of the link : _blank, _self, ...
@@ -135,7 +135,7 @@ class PrettyLinkAdapter(object):
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join([u"<img title='{0}' src='{1}' />".format(safe_unicode(icon[1]),
+        return ' '.join([u"<img title='{0}' src='{1}' />".format(safe_unicode(icon[1]).replace("'", "&#39;"),
                                                                  "{0}/{1}".format(self.portal_url, icon[0]))
                          for icon in icons])
 
