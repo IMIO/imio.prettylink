@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3 (unreleased)
+1.3 (2016-04-20)
 ----------------
 
 - Make sure quotes used in title are not breaking formatted strings,
