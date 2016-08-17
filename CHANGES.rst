@@ -4,8 +4,13 @@ Changelog
 1.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Added CSS class 'no_access' to <span> "can_not_access_this_element"
+  in addition to class 'discreet' so it may be customized if necessary.
+  [gbastien]
+- Initialize the 'title' attribute with contentValue, this way if a
+  content is cropped to be displayed (maxLength=...), the complete content
+  is displayed on hover.
+  [gbastien]
 
 1.3 (2016-04-20)
 ----------------

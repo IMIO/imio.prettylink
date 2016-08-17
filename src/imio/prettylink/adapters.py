@@ -58,15 +58,16 @@ class PrettyLinkAdapter(object):
             'can_not_access_this_element',
             domain="imio.prettylink",
             context=self.request,
-            default=u"<span class='discreet'>(You can not access this element)</span>")
+            default=u"<span class='discreet no_access'>(You can not access this element)</span>")
 
     def getLink(self):
         """See docstring in interfaces.py."""
-        content = safe_unicode(self.contentValue or self.context.Title())
+        completeContent = safe_unicode(self.contentValue or self.context.Title())
+        content = completeContent
         if self.maxLength:
             plone_view = self.context.restrictedTraverse('@@plone')
             ellipsis = self.kwargs.get('ellipsis', '...')
-            content = plone_view.cropText(content, self.maxLength, ellipsis)
+            content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
             url = self.context.absolute_url() + self.appendToUrl
@@ -74,7 +75,7 @@ class PrettyLinkAdapter(object):
             return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}" \
                    u"<span class='pretty_link_content'>{5}</span></a>" \
                    .format(self.CSSClasses(),
-                           safe_unicode(self.tag_title),
+                           safe_unicode(self.tag_title or completeContent.replace("'", "&#39;")),
                            url,
                            self.target,
                            icons_tag,
@@ -87,7 +88,7 @@ class PrettyLinkAdapter(object):
             icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
             return u"<div class='{0}' title='{1}'>{2}<span class='pretty_link_content'>{3}</span></div>" \
                    .format(self.CSSClasses(),
-                           safe_unicode(self.tag_title),
+                           safe_unicode(self.tag_title or completeContent.replace("'", "&#39;")),
                            icons_tag,
                            safe_unicode(content))
 
