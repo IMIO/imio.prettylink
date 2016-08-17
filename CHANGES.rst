@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.4 (unreleased)
+1.4 (2016-08-17)
 ----------------
 
 - Added CSS class 'no_access' to <span> "can_not_access_this_element"
