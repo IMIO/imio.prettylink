@@ -26,7 +26,7 @@ class PrettyLinkAdapter(object):
                  **kwargs):
         self.context = context
         self.request = self.context.REQUEST
-        self.portal_url = api.portal.get_tool('portal_url').getPortalObject().absolute_url()
+        self.portal_url = api.portal.get().absolute_url()
         # we set parameters in the init so it it reusable across every methods
         self.showColors = showColors
         self.showIcons = showIcons
