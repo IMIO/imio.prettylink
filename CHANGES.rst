@@ -4,8 +4,10 @@ Changelog
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Added submethod _get_url that does the url computation.
+  Additionally it manages the fact that context is a Dexterity file and
+  append relevant part to the url (/@@download/...).
+  [gbastien]
 
 1.4 (2016-08-17)
 ----------------

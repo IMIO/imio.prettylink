@@ -5,6 +5,7 @@ from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
+from plone.rfc822.interfaces import IPrimaryFieldInfo
 
 
 class PrettyLinkAdapter(object):
@@ -70,7 +71,7 @@ class PrettyLinkAdapter(object):
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
-            url = self.context.absolute_url() + self.appendToUrl
+            url = self._get_url()
             icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
             return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}" \
                    u"<span class='pretty_link_content'>{5}</span></a>" \
@@ -91,6 +92,20 @@ class PrettyLinkAdapter(object):
                            safe_unicode(self.tag_title or completeContent.replace("'", "&#39;")),
                            icons_tag,
                            safe_unicode(content))
+
+    def _get_url(self):
+        """Compute the url to the content."""
+        url = self.context.absolute_url()
+        # add @@download to url if necessary, it is the case for dexterity files
+        try:
+            primary_field = IPrimaryFieldInfo(self.context)
+            filename = getattr(self.context, primary_field.fieldname).filename
+            url = u'{0}/@@download/{1}/{2}'.format(url,
+                                                   primary_field.fieldname,
+                                                   filename)
+        except TypeError:
+            pass
+        return url + self.appendToUrl
 
     def CSSClasses(self):
         """See docstring in interfaces.py."""
