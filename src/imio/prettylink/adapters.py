@@ -151,9 +151,10 @@ class PrettyLinkAdapter(object):
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join([u"<img title='{0}' src='{1}' />".format(safe_unicode(icon[1]).replace("'", "&#39;"),
-                                                                 "{0}/{1}".format(self.portal_url, icon[0]))
-                         for icon in icons])
+        return ' '.join([u"<img title='{0}' src='{1}' />".format(
+            safe_unicode(icon[1]).replace("'", "&#39;"),
+            u"{0}/{1}".format(self.portal_url, icon[0]))
+            for icon in icons])
 
     def _leadingIcons(self):
         """See docstring in interfaces.py."""

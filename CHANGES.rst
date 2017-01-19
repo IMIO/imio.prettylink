@@ -8,6 +8,8 @@ Changelog
   Additionally it manages the fact that context is a Dexterity file and
   append relevant part to the url (/@@download/...).
   [gbastien]
+- Do not break if icon name contains special characters.
+  [gbastien]
 
 1.4 (2016-08-17)
 ----------------
