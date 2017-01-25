@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.5 (unreleased)
+1.5 (2017-01-25)
 ----------------
 
 - Added submethod _get_url that does the url computation.
