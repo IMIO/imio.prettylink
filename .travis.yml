@@ -17,6 +17,11 @@ before_script:
 script:
   - bin/test
 
+after_success:
+  - bin/coverage run bin/test
+  - pip install coveralls==0.5
+  - coveralls
+
 notifications:
   email:
     recipients:
