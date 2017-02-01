@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6 (unreleased)
+1.6 (2017-02-01)
 ----------------
 
 - Added caching for `PrettyLinkAdapter.getLink`, the cachekey returns context,
