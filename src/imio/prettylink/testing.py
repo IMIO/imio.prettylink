@@ -36,8 +36,12 @@ class PloneWithPrettyLinkLayer(PloneSandboxLayer):
         # Login and create some test content
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
-        folder_id = portal.invokeFactory('Folder', 'folder')
+        # make sure we have a default workflow
+        portal.portal_workflow.setDefaultChain('simple_publication_workflow')
+        folder_id = portal.invokeFactory('Folder', 'folder', title='Folder')
+        folder_id2 = portal.invokeFactory('Folder', 'folder2', title='Folder2')
         portal[folder_id].reindexObject()
+        portal[folder_id2].reindexObject()
 
         # Commit so that the test browser sees these objects
         import transaction
@@ -82,4 +86,6 @@ class IntegrationTestCase(unittest.TestCase):
     def setUp(self):
         super(IntegrationTestCase, self).setUp()
         self.portal = self.layer['portal']
+        self.folder = self.portal.folder
+        self.folder2 = self.portal.folder2
         self.catalog = self.portal.portal_catalog

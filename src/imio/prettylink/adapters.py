@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from Acquisition import aq_inner
 from zope.i18n import translate
 from plone import api
+from plone.locking.interfaces import ILockable
+from plone.memoize import ram
 from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -61,6 +64,26 @@ class PrettyLinkAdapter(object):
             context=self.request,
             default=u"<span class='discreet no_access'>(You can not access this element)</span>")
 
+    def getLink_cachekey(method, self):
+        '''cachekey method for self.getLink.'''
+        is_locked = self.showLockedIcon and ILockable(aq_inner(self.context)).locked()
+        # cache by context, until modified and is_locked
+        # + every parameters passed in __init__
+        return (self.context, self.context.modified(), is_locked,
+                self.showColors,
+                self.showIcons,
+                self.showContentIcon,
+                self.showLockedIcon,
+                self.contentValue,
+                self.tag_title,
+                self.maxLength,
+                self.target,
+                self.appendToUrl,
+                self.additionalCSSClasses,
+                self.isViewable,
+                self.kwargs)
+
+    @ram.cache(getLink_cachekey)
     def getLink(self):
         """See docstring in interfaces.py."""
         completeContent = safe_unicode(self.contentValue or self.context.Title())

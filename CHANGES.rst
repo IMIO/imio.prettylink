@@ -4,8 +4,10 @@ Changelog
 1.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Added caching for `PrettyLinkAdapter.getLink`.
+  [gbastien]
+- Finalized testing configuration to be able to test the getLink caching.
+  [gbastien]
 
 1.5 (2017-01-25)
 ----------------
