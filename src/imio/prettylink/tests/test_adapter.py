@@ -2,6 +2,7 @@
 
 from imio.prettylink.interfaces import IPrettyLink
 from imio.prettylink.testing import IntegrationTestCase
+from plone import api
 from plone.locking.interfaces import ILockable
 
 
@@ -37,6 +38,14 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertTrue(u"lock_icon.png" in IPrettyLink(self.folder).getLink())
         ILockable(self.folder).unlock()
         self.assertFalse(u"lock_icon.png" in IPrettyLink(self.folder).getLink())
+
+    def test_getLink_caching_review_state(self):
+        """Cache takes 'locking 'review_state' into account."""
+        self.assertTrue(u"<a class='pretty_link state-private' "
+                        in IPrettyLink(self.folder).getLink())
+        api.content.transition(self.folder, 'publish')
+        self.assertTrue(u"<a class='pretty_link state-published' "
+                        in IPrettyLink(self.folder).getLink())
 
     def test_getLink_caching_showColors(self):
         """Cache takes the 'showColors' parameter into account."""

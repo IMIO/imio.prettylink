@@ -4,7 +4,13 @@ Changelog
 1.6 (unreleased)
 ----------------
 
-- Added caching for `PrettyLinkAdapter.getLink`.
+- Added caching for `PrettyLinkAdapter.getLink`, the cachekey returns context,
+  modified, is_locked, review_state and every parameters defined in 
+  `PrettyLinkAdapter.__init__`.
+  [gbastien]
+- Moved link computation from `PrettyLinkAdapter.getLink` that is now a cached
+  method to `PrettyLinkAdapter._getLink` so it is possible to call it directly
+  without caching or to override it.
   [gbastien]
 - Finalized testing configuration to be able to test the getLink caching.
   [gbastien]

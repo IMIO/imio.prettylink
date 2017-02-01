@@ -67,9 +67,10 @@ class PrettyLinkAdapter(object):
     def getLink_cachekey(method, self):
         '''cachekey method for self.getLink.'''
         is_locked = self.showLockedIcon and ILockable(aq_inner(self.context)).locked()
-        # cache by context, until modified and is_locked
+        review_state = api.content.get_state(self.context)
+        # cache by context, until modified, is_locked or state changed
         # + every parameters passed in __init__
-        return (self.context, self.context.modified(), is_locked,
+        return (self.context, self.context.modified(), is_locked, review_state,
                 self.showColors,
                 self.showIcons,
                 self.showContentIcon,
@@ -86,6 +87,11 @@ class PrettyLinkAdapter(object):
     @ram.cache(getLink_cachekey)
     def getLink(self):
         """See docstring in interfaces.py."""
+        return self._getLink()
+
+    def _getLink(self):
+        """Private method that does the link computation without the cachekey,
+           this is done so it is possible to override the cachekey."""
         completeContent = safe_unicode(self.contentValue or self.context.Title())
         content = completeContent
         if self.maxLength:
