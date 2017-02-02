@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.7 (unreleased)
+1.7 (2017-02-02)
 ----------------
 
 - Do not break in `PrettyLinkAdapter.getLink_cachekey` if context does not have
