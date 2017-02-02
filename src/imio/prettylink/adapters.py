@@ -67,7 +67,7 @@ class PrettyLinkAdapter(object):
     def getLink_cachekey(method, self):
         '''cachekey method for self.getLink.'''
         is_locked = self.showLockedIcon and ILockable(aq_inner(self.context)).locked()
-        review_state = api.content.get_state(self.context)
+        review_state = api.content.get_state(self.context, None)
         # cache by context, until modified, is_locked or state changed
         # + every parameters passed in __init__
         return (self.context, self.context.modified(), is_locked, review_state,

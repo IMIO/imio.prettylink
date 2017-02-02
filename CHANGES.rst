@@ -4,8 +4,9 @@ Changelog
 1.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Do not break in `PrettyLinkAdapter.getLink_cachekey` if context does not have
+  a workflow.
+  [gbastien]
 
 1.6 (2017-02-01)
 ----------------

@@ -151,3 +151,19 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         adapted.kwargs['ellipsis'] = ' [truncated]'
         self.assertFalse(u"<span class='pretty_link_content'>Fo...</span>" in adapted.getLink())
         self.assertTrue(u"<span class='pretty_link_content'>Fo [truncated]</span>" in adapted.getLink())
+
+    def test_getLink_caching_not_breaking_when_no_workflow(self):
+        """Caching also work when element has no workflow."""
+        self.portal.portal_workflow.setDefaultChain('')
+        no_wf_folder = api.content.create(
+            container=self.portal,
+            type='Folder',
+            id='no_wf_folder',
+            title='No WF folder')
+        self.assertTrue(IPrettyLink(no_wf_folder).getLink())
+        # and caching work, change folder title, link is still the same
+        # until notifyModified
+        no_wf_folder.setTitle('New title')
+        self.assertFalse(no_wf_folder.Title() in IPrettyLink(no_wf_folder).getLink())
+        no_wf_folder.notifyModified()
+        self.assertTrue(no_wf_folder.Title() in IPrettyLink(no_wf_folder).getLink())
