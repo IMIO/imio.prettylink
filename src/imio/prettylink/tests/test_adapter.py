@@ -40,12 +40,25 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertFalse(u"lock_icon.png" in IPrettyLink(self.folder).getLink())
 
     def test_getLink_caching_review_state(self):
-        """Cache takes 'locking 'review_state' into account."""
+        """Cache takes 'review_state' into account."""
         self.assertTrue(u"<a class='pretty_link state-private' "
                         in IPrettyLink(self.folder).getLink())
         api.content.transition(self.folder, 'publish')
         self.assertTrue(u"<a class='pretty_link state-published' "
                         in IPrettyLink(self.folder).getLink())
+
+    def test_getLink_context_portal_url(self):
+        """Cache takes context absolute_url into account, this could change when
+           accessing the portal thru different domains or so."""
+        portal = api.portal.get()
+        portal_url = portal.absolute_url()
+        ANOTHER_HOST = 'http://another_host'
+        self.assertTrue(portal_url in IPrettyLink(self.folder).getLink())
+        self.assertFalse(ANOTHER_HOST in IPrettyLink(self.folder).getLink())
+        # change REQUEST['SERVER_URL'] used by absolute_url()
+        self.portal.REQUEST['SERVER_URL'] = ANOTHER_HOST
+        self.portal.REQUEST['ACTUAL_URL'] = self.folder.absolute_url()
+        self.assertTrue(ANOTHER_HOST in IPrettyLink(self.folder).getLink())
 
     def test_getLink_caching_showColors(self):
         """Cache takes the 'showColors' parameter into account."""
