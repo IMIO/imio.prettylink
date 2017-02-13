@@ -4,7 +4,7 @@ Changelog
 1.8 (unreleased)
 ----------------
 
-- Take ACTUAL_URL stored in the REQUEST into account in the getLink caching
+- Take `ACTUAL_URL` stored in the REQUEST into account in the `getLink` caching
   cachekey to manage the fact that the URL to the element changed.  This can
   be the case when accessing element thru different domains or if a parent
   of the element was renamed.
