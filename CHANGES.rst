@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.8 (unreleased)
+1.8 (2017-02-13)
 ----------------
 
 - Take `ACTUAL_URL` stored in the REQUEST into account in the `getLink` caching
