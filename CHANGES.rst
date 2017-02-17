@@ -4,8 +4,9 @@ Changelog
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Do simplify link to file the download by just appending the @@download to
+  the URL, this is enough if current context has a primary field.
+  [gbastien]
 
 1.8 (2017-02-13)
 ----------------

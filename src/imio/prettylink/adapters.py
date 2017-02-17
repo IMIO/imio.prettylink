@@ -128,11 +128,8 @@ class PrettyLinkAdapter(object):
         url = self.context.absolute_url()
         # add @@download to url if necessary, it is the case for dexterity files
         try:
-            primary_field = IPrimaryFieldInfo(self.context)
-            filename = getattr(self.context, primary_field.fieldname).filename
-            url = u'{0}/@@download/{1}/{2}'.format(url,
-                                                   primary_field.fieldname,
-                                                   filename)
+            if IPrimaryFieldInfo(self.context):
+                url = u'{0}/@@download'.format(url)
         except TypeError:
             pass
         return url + self.appendToUrl
