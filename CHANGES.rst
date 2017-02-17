@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.9 (unreleased)
+1.9 (2017-02-17)
 ----------------
 
 - Do simplify link to file the download by just appending the @@download to
