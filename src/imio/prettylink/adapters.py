@@ -170,7 +170,9 @@ class PrettyLinkAdapter(object):
             typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
             if typeInfo.icon_expr:
                 # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
-                contentIcon = typeInfo.icon_expr.split('/')[-1]
+                # or like string:${portal_url}/++resource++package/myContentIcon.png
+                # we skip first part
+                contentIcon = '/'.join(typeInfo.icon_expr.split('/')[1:])
                 icons.append((contentIcon,
                               translate(typeInfo.title,
                                         domain=typeInfo.i18n_domain,

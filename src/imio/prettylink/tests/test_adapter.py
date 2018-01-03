@@ -4,9 +4,15 @@ from imio.prettylink.interfaces import IPrettyLink
 from imio.prettylink.testing import IntegrationTestCase
 from plone import api
 from plone.locking.interfaces import ILockable
+from plone.memoize.interfaces import ICacheChooser
+from zope.component import getUtility
 
 
 class TestPrettyLinkAdapter(IntegrationTestCase):
+
+    def invalidate_cache(self):
+        cache = getUtility(ICacheChooser)('imio.prettylink.adapters.getLink')
+        cache.ramcache.invalidate('imio.prettylink.adapters.getLink')
 
     def test_getLink_caching_modified(self):
         """Cache is invalidated when modified."""
@@ -80,10 +86,22 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
     def test_getLink_caching_showContentIcon(self):
         """Cache takes the 'showContentIcon' parameter into account."""
         adapted = IPrettyLink(self.folder)
+        self.assertTrue(adapted.showIcons)
         self.assertFalse(adapted.showContentIcon)
         self.assertFalse(u"contenttype-Folder" in adapted.getLink())
         adapted.showContentIcon = True
         self.assertTrue(u"contenttype-Folder" in adapted.getLink())
+        typeInfo = api.portal.get_tool('portal_types')['Folder']
+        # setting an icon
+        self.invalidate_cache()
+        typeInfo.icon_expr = 'string:${portal_url}/myContentIcon.png'
+        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertTrue(u"plone/myContentIcon.png" in adapted.getLink())
+        self.invalidate_cache()
+        typeInfo.icon_expr = 'string:${portal_url}/++resource++package/myContentIcon.png'
+        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertTrue(u"plone/++resource++package/myContentIcon.png" in adapted.getLink())
+        self.invalidate_cache()
 
     def test_getLink_caching_showLockedIcon(self):
         """Cache takes the 'showLockedIcon' parameter into account."""

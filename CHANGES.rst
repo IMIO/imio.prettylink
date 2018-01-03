@@ -4,8 +4,8 @@ Changelog
 1.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Handle icon path correctly.
+  [sgeulette]
 
 1.9 (2017-02-17)
 ----------------
@@ -34,7 +34,7 @@ Changelog
 ----------------
 
 - Added caching for `PrettyLinkAdapter.getLink`, the cachekey returns context,
-  modified, is_locked, review_state and every parameters defined in 
+  modified, is_locked, review_state and every parameters defined in
   `PrettyLinkAdapter.__init__`.
   [gbastien]
 - Moved link computation from `PrettyLinkAdapter.getLink` that is now a cached
@@ -86,7 +86,7 @@ Changelog
 - When using 'showColors', do not fail if element has no workflow.
   [gbastien]
 - Makes 'showContentIcon' work, fixed several bugs.
-  [gbastien] 
+  [gbastien]
 
 1.0 (2015-07-14)
 ----------------
