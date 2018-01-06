@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.10 (unreleased)
+1.10 (2018-01-06)
 -----------------
 
 - Handle icon path correctly.
