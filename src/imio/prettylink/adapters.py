@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from Acquisition import aq_inner
 from zope.i18n import translate
 from plone import api
 from plone.memoize import ram
