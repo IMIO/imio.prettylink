@@ -2,7 +2,6 @@
 from Acquisition import aq_inner
 from zope.i18n import translate
 from plone import api
-from plone.locking.interfaces import ILockable
 from plone.memoize import ram
 from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
@@ -66,7 +65,7 @@ class PrettyLinkAdapter(object):
 
     def getLink_cachekey(method, self):
         '''cachekey method for self.getLink.'''
-        is_locked = self.showLockedIcon and ILockable(aq_inner(self.context)).locked()
+        is_locked = self._show_lock_icon()
         review_state = api.content.get_state(self.context, None)
         actual_url = self.request.get('ACTUAL_URL', None)
         # cache by context, until modified, is_locked, state changed or actual_url is different
@@ -161,9 +160,8 @@ class PrettyLinkAdapter(object):
         icons = icons + self._leadingIcons()
 
         # display the icon that shows that an element is currently locked by another user
-        if self.showLockedIcon:
-            if self.context.wl_isLocked():
-                icons.append(("lock_icon.png", translate("Locked", domain="plone", context=self.request)))
+        if self._show_lock_icon():
+            icons.append(("lock_icon.png", translate("Locked", domain="plone", context=self.request)))
 
         # in case the contentIcon must be shown, the icon url is defined on the typeInfo
         if self.showContentIcon:
@@ -184,6 +182,10 @@ class PrettyLinkAdapter(object):
             safe_unicode(icon[1]).replace("'", "&#39;"),
             u"{0}/{1}".format(self.portal_url, icon[0]))
             for icon in icons])
+
+    def _show_lock_icon(self):
+        """ """
+        return self.showLockedIcon and self.context.wl_isLocked()
 
     def _leadingIcons(self):
         """See docstring in interfaces.py."""
