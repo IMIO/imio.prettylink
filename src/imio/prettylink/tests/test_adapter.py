@@ -198,3 +198,12 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertFalse(no_wf_folder.Title() in IPrettyLink(no_wf_folder).getLink())
         no_wf_folder.notifyModified()
         self.assertTrue(no_wf_folder.Title() in IPrettyLink(no_wf_folder).getLink())
+
+    def test_getLink_link_tooltip(self):
+        """title attr is absent if link-tooltip is in additionalCSSClasses."""
+        pl = IPrettyLink(self.folder)
+        pl.additionalCSSClasses = ['link-tooltip']
+        self.assertEqual(
+            pl.getLink(),
+            u"<a class='pretty_link link-tooltip state-private' title='' href='http://nohost/plone/folder' "
+            u"target='_self'><span class='pretty_link_content'>Folder</span></a>")
