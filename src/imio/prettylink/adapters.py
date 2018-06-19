@@ -19,6 +19,7 @@ class PrettyLinkAdapter(object):
                  showContentIcon=False,
                  showLockedIcon=True,
                  contentValue='',
+                 display_tag_title=True,
                  tag_title='',
                  maxLength=0,
                  target='_self',
@@ -38,6 +39,7 @@ class PrettyLinkAdapter(object):
         self.contentValue = contentValue
         # arbitrary tag_title, escape quotes
         self.tag_title = tag_title.replace("'", "&#39;")
+        self.display_tag_title = display_tag_title
         # truncate link content to given maxLength if any
         self.maxLength = maxLength
         # target of the link : _blank, _self, ...
@@ -76,6 +78,7 @@ class PrettyLinkAdapter(object):
                 self.showLockedIcon,
                 self.contentValue,
                 self.tag_title,
+                self.display_tag_title,
                 self.maxLength,
                 self.target,
                 self.appendToUrl,
@@ -98,19 +101,14 @@ class PrettyLinkAdapter(object):
             ellipsis = self.kwargs.get('ellipsis', '...')
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ''
+        title = safe_unicode(self.tag_title or completeContent.replace("'", "&#39;"))
         if self.isViewable:
-            if 'link-tooltip' in self.additionalCSSClasses:
-                # we don't want title for link that create tooltips (if there is a title, tooltips are created in the body)
-                title = ''
-            else:
-                title = safe_unicode(self.tag_title or completeContent.replace("'", "&#39;"))
-
             url = self._get_url()
             icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
-            return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}" \
+            return u"<a class='{0}'{1} href='{2}' target='{3}'>{4}" \
                    u"<span class='pretty_link_content'>{5}</span></a>" \
                    .format(self.CSSClasses(),
-                           title,
+                           self.display_tag_title and u" title='{0}'".format(title) or '',
                            url,
                            self.target,
                            icons_tag,
@@ -121,9 +119,9 @@ class PrettyLinkAdapter(object):
                 (u"{0} {1}".format(content, self.notViewableHelpMessage)) or \
                 content
             icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
-            return u"<div class='{0}' title='{1}'>{2}<span class='pretty_link_content'>{3}</span></div>" \
+            return u"<div class='{0}'{1}>{2}<span class='pretty_link_content'>{3}</span></div>" \
                    .format(self.CSSClasses(),
-                           safe_unicode(self.tag_title or completeContent.replace("'", "&#39;")),
+                           self.display_tag_title and u" title='{0}'".format(title) or '',
                            icons_tag,
                            safe_unicode(content))
 
