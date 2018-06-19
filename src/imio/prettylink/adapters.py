@@ -99,12 +99,18 @@ class PrettyLinkAdapter(object):
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ''
         if self.isViewable:
+            if 'link-tooltip' in self.additionalCSSClasses:
+                # we don't want title for link that create tooltips (if there is a title, tooltips are created in the body)
+                title = ''
+            else:
+                title = safe_unicode(self.tag_title or completeContent.replace("'", "&#39;"))
+
             url = self._get_url()
             icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
             return u"<a class='{0}' title='{1}' href='{2}' target='{3}'>{4}" \
                    u"<span class='pretty_link_content'>{5}</span></a>" \
                    .format(self.CSSClasses(),
-                           safe_unicode(self.tag_title or completeContent.replace("'", "&#39;")),
+                           title,
                            url,
                            self.target,
                            icons_tag,
