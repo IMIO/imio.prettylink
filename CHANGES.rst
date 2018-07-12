@@ -7,6 +7,8 @@ Changelog
 - Use `self.context.wl_isLocked()` to show locking icon so it does not break
   on non lockable objects.
   [gbastien]
+- Added boolean `display_tag_title` parameter.
+  [sgeulette]
 
 1.10 (2018-01-06)
 -----------------
