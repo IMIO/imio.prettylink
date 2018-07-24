@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.11 (unreleased)
+1.11 (2018-07-24)
 -----------------
 
 - Use `self.context.wl_isLocked()` to show locking icon so it does not break
