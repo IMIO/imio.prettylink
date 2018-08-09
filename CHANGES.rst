@@ -9,6 +9,9 @@ Changelog
   [gbastien]
 - Added boolean `display_tag_title` parameter.
   [sgeulette]
+- Small fixes, `isort`, do not compute `icons_tag` at 2 places and
+  `self.notViewableHelpMessage` is always defined.
+  [gbastien]
 
 1.10 (2018-01-06)
 -----------------

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from zope.i18n import translate
 from plone import api
 from plone.memoize import ram
+from plone.rfc822.interfaces import IPrimaryFieldInfo
 from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
-from plone.rfc822.interfaces import IPrimaryFieldInfo
+from zope.i18n import translate
 
 
 class PrettyLinkAdapter(object):
@@ -102,9 +102,9 @@ class PrettyLinkAdapter(object):
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ''
         title = safe_unicode(self.tag_title or completeContent.replace("'", "&#39;"))
+        icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         if self.isViewable:
             url = self._get_url()
-            icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
             return u"<a class='{0}'{1} href='{2}' target='{3}'>{4}" \
                    u"<span class='pretty_link_content'>{5}</span></a>" \
                    .format(self.CSSClasses(),
@@ -114,11 +114,8 @@ class PrettyLinkAdapter(object):
                            icons_tag,
                            safe_unicode(content))
         else:
-            # display the notViewableHelpMessage if any
-            content = self.notViewableHelpMessage and \
-                (u"{0} {1}".format(content, self.notViewableHelpMessage)) or \
-                content
-            icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
+            # append the notViewableHelpMessage
+            content = u"{0} {1}".format(content, self.notViewableHelpMessage)
             return u"<div class='{0}'{1}>{2}<span class='pretty_link_content'>{3}</span></div>" \
                    .format(self.CSSClasses(),
                            self.display_tag_title and u" title='{0}'".format(title) or '',
