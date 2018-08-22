@@ -1,7 +1,14 @@
 Changelog
 =========
 
-1.11 (unreleased)
+1.12 (unreleased)
+-----------------
+
+- Small fixes, `isort`, do not compute `icons_tag` at 2 places and
+  `self.notViewableHelpMessage` is always defined.
+  [gbastien]
+
+1.11 (2018-07-24)
 -----------------
 
 - Use `self.context.wl_isLocked()` to show locking icon so it does not break
@@ -9,9 +16,6 @@ Changelog
   [gbastien]
 - Added boolean `display_tag_title` parameter.
   [sgeulette]
-- Small fixes, `isort`, do not compute `icons_tag` at 2 places and
-  `self.notViewableHelpMessage` is always defined.
-  [gbastien]
 
 1.10 (2018-01-06)
 -----------------
