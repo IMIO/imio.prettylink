@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.12 (unreleased)
+1.12 (2018-08-22)
 -----------------
 
 - Small fixes, `isort`, do not compute `icons_tag` at 2 places and
