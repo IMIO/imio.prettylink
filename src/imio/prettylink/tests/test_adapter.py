@@ -53,17 +53,15 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertTrue(u"<a class='pretty_link state-published' "
                         in IPrettyLink(self.folder).getLink())
 
-    def test_getLink_context_portal_url(self):
-        """Cache takes context absolute_url into account, this could change when
-           accessing the portal thru different domains or so."""
+    def test_getLink_server_url(self):
+        """Cache takes portal url (SERVER_URL) into account,
+           this could change when accessing the portal thru different domains or so."""
         portal = api.portal.get()
         portal_url = portal.absolute_url()
         ANOTHER_HOST = 'http://another_host'
         self.assertTrue(portal_url in IPrettyLink(self.folder).getLink())
         self.assertFalse(ANOTHER_HOST in IPrettyLink(self.folder).getLink())
-        # change REQUEST['SERVER_URL'] used by absolute_url()
         self.portal.REQUEST['SERVER_URL'] = ANOTHER_HOST
-        self.portal.REQUEST['ACTUAL_URL'] = self.folder.absolute_url()
         self.assertTrue(ANOTHER_HOST in IPrettyLink(self.folder).getLink())
 
     def test_getLink_caching_showColors(self):

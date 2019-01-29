@@ -4,8 +4,11 @@ Changelog
 1.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed `getLink` cachekey to use `SERVER_URL` instead `ACTUAL_URL` or value is
+  computed depending on current URL and it leads to be computed on several
+  places (dashboard, view, ...).  What we need is just to compute if application
+  is accessed thru different portal URL.
+  [gbastien]
 
 1.12 (2018-08-22)
 -----------------

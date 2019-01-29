@@ -68,10 +68,10 @@ class PrettyLinkAdapter(object):
         '''cachekey method for self.getLink.'''
         is_locked = self._show_lock_icon()
         review_state = api.content.get_state(self.context, None)
-        actual_url = self.request.get('ACTUAL_URL', None)
-        # cache by context, until modified, is_locked, state changed or actual_url is different
+        server_url = self.request.get('SERVER_URL', None)
+        # cache by context, until modified, is_locked, state changed or server_url is different
         # + every parameters passed in __init__
-        return (self.context, self.context.modified(), is_locked, review_state, actual_url,
+        return (self.context, self.context.modified(), is_locked, review_state, server_url,
                 self.showColors,
                 self.showIcons,
                 self.showContentIcon,
