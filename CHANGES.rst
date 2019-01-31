@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.13 (unreleased)
+1.13 (2019-01-31)
 -----------------
 
 - Fixed `getLink` cachekey to use `SERVER_URL` instead `ACTUAL_URL` or value is
