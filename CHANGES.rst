@@ -4,8 +4,8 @@ Changelog
 1.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Use context.UID instead context in ram.cache cachekey.
+  [gbastien]
 
 1.13 (2019-01-31)
 -----------------

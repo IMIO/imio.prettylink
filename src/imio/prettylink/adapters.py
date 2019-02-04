@@ -71,7 +71,7 @@ class PrettyLinkAdapter(object):
         server_url = self.request.get('SERVER_URL', None)
         # cache by context, until modified, is_locked, state changed or server_url is different
         # + every parameters passed in __init__
-        return (self.context, self.context.modified(), is_locked, review_state, server_url,
+        return (self.context.UID(), self.context.modified(), is_locked, review_state, server_url,
                 self.showColors,
                 self.showIcons,
                 self.showContentIcon,
