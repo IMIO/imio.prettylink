@@ -64,6 +64,7 @@ class PrettyLinkAdapter(object):
             domain="imio.prettylink",
             context=self.request,
             default=u"<span class='discreet no_access'>(You can not access this element)</span>")
+        self.link_pattern = link_pattern
 
     def getLink_cachekey(method, self):
         '''cachekey method for self.getLink.'''
