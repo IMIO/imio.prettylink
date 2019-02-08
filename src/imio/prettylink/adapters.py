@@ -26,6 +26,7 @@ class PrettyLinkAdapter(object):
                  appendToUrl='',
                  additionalCSSClasses=[],
                  isViewable=True,
+                 link_pattern=u"<div class='{0}'{1}>{2}<span class='pretty_link_content'>{3}</span></div>",
                  **kwargs):
         self.context = context
         self.request = self.context.REQUEST
@@ -116,11 +117,11 @@ class PrettyLinkAdapter(object):
         else:
             # append the notViewableHelpMessage
             content = u"{0} {1}".format(content, self.notViewableHelpMessage)
-            return u"<div class='{0}'{1}>{2}<span class='pretty_link_content'>{3}</span></div>" \
-                   .format(self.CSSClasses(),
-                           self.display_tag_title and u" title='{0}'".format(title) or '',
-                           icons_tag,
-                           safe_unicode(content))
+            return self.link_pattern.format(
+                self.CSSClasses(),
+                self.display_tag_title and u" title='{0}'".format(title) or '',
+                icons_tag,
+                safe_unicode(content))
 
     def _get_url(self):
         """Compute the url to the content."""

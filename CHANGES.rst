@@ -6,6 +6,8 @@ Changelog
 
 - Use context.UID instead context in ram.cache cachekey.
   [gbastien]
+- Moved rendering link HTML pattern to the link_pattern so it can be changed.
+  [gbastien]
 
 1.13 (2019-01-31)
 -----------------
