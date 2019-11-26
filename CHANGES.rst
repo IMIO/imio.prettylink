@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.15 (unreleased)
+1.15 (2019-11-26)
 -----------------
 
 - Removed `unittest2`.
