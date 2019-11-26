@@ -4,8 +4,8 @@ Changelog
 1.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- While generating not viewable URL, avoid double blank before tag title.
+  [gbastien]
 
 1.15 (2019-11-26)
 -----------------

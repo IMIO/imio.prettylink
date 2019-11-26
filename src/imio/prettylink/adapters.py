@@ -26,7 +26,7 @@ class PrettyLinkAdapter(object):
                  appendToUrl='',
                  additionalCSSClasses=[],
                  isViewable=True,
-                 link_pattern=u"<div class='pretty_link' {0}>{1}<span class='pretty_link_content{2}'>{3}</span></div>",
+                 link_pattern=u"<div class='pretty_link'{0}>{1}<span class='pretty_link_content{2}'>{3}</span></div>",
                  **kwargs):
         self.context = context
         self.request = self.context.REQUEST
