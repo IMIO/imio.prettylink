@@ -19,10 +19,6 @@ install:
   - bin/buildout -Nc travis.cfg annotate
   - bin/buildout -Nc travis.cfg
 
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-
 script:
   - bin/test
 
