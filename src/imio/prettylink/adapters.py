@@ -26,7 +26,7 @@ class PrettyLinkAdapter(object):
                  appendToUrl='',
                  additionalCSSClasses=[],
                  isViewable=True,
-                 link_pattern=u"<div class='{0}'{1}>{2}<span class='pretty_link_content'>{3}</span></div>",
+                 link_pattern=u"<div class='pretty_link' {0}>{1}<span class='pretty_link_content{2}'>{3}</span></div>",
                  **kwargs):
         self.context = context
         self.request = self.context.REQUEST
@@ -107,21 +107,21 @@ class PrettyLinkAdapter(object):
         icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         if self.isViewable:
             url = self._get_url()
-            return u"<a class='{0}'{1} href='{2}' target='{3}'>{4}" \
-                   u"<span class='pretty_link_content'>{5}</span></a>" \
-                   .format(self.CSSClasses(),
-                           self.display_tag_title and u" title='{0}'".format(title) or '',
+            return u"<a class='pretty_link'{0} href='{1}' target='{2}'>{3}" \
+                   u"<span class='pretty_link_content{4}'>{5}</span></a>" \
+                   .format(self.display_tag_title and u" title='{0}'".format(title) or '',
                            url,
                            self.target,
                            icons_tag,
+                           self.CSSClasses(),
                            safe_unicode(content))
         else:
             # append the notViewableHelpMessage
             content = u"{0} {1}".format(content, self.notViewableHelpMessage)
             return self.link_pattern.format(
-                self.CSSClasses(),
                 self.display_tag_title and u" title='{0}'".format(title) or '',
                 icons_tag,
+                self.CSSClasses(),
                 safe_unicode(content))
 
     def _get_url(self):
@@ -138,7 +138,6 @@ class PrettyLinkAdapter(object):
     def CSSClasses(self):
         """See docstring in interfaces.py."""
         css_classes = list(self.additionalCSSClasses)
-        css_classes.insert(0, 'pretty_link')
         if self.showColors:
             wft = api.portal.get_tool('portal_workflow')
             try:
@@ -152,6 +151,8 @@ class PrettyLinkAdapter(object):
             typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
             if not typeInfo.icon_expr:
                 css_classes.append('contenttype-{0}'.format(typeInfo.getId()))
+        if css_classes:
+            css_classes.insert(0, '')
         return ' '.join(css_classes)
 
     def _icons(self, **kwargs):

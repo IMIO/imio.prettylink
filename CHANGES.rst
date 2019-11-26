@@ -4,8 +4,12 @@ Changelog
 1.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Removed `unittest2`.
+  [gbastien]
+- Moved the state related CSS class from the `<a>/<div>` tag to the `<span>`
+  inner tag, this way it is easier to define CSS compatible for
+  `imio.prettylink` and `imio.history`.
+  [gbastien]
 
 1.14 (2019-05-16)
 -----------------

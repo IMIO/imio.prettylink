@@ -18,8 +18,8 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache is invalidated when modified."""
         self.assertEqual(
             IPrettyLink(self.folder).getLink(),
-            u"<a class='pretty_link state-private' title='Folder' href='http://nohost/plone/folder' "
-            u"target='_self'><span class='pretty_link_content'>Folder</span></a>")
+            u"<a class='pretty_link' title='Folder' href='http://nohost/plone/folder' "
+            u"target='_self'><span class='pretty_link_content state-private'>Folder</span></a>")
         # change Title and do not notify modified
         self.folder.setTitle('Folder other title')
         self.assertTrue(" title='Folder' " in IPrettyLink(self.folder).getLink())
@@ -31,12 +31,12 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cached by context so getLink on self.folder2 is correct."""
         self.assertEqual(
             IPrettyLink(self.folder).getLink(),
-            u"<a class='pretty_link state-private' title='Folder' href='http://nohost/plone/folder' "
-            u"target='_self'><span class='pretty_link_content'>Folder</span></a>")
+            u"<a class='pretty_link' title='Folder' href='http://nohost/plone/folder' "
+            u"target='_self'><span class='pretty_link_content state-private'>Folder</span></a>")
         self.assertEqual(
             IPrettyLink(self.folder2).getLink(),
-            u"<a class='pretty_link state-private' title='Folder2' href='http://nohost/plone/folder2' "
-            u"target='_self'><span class='pretty_link_content'>Folder2</span></a>")
+            u"<a class='pretty_link' title='Folder2' href='http://nohost/plone/folder2' "
+            u"target='_self'><span class='pretty_link_content state-private'>Folder2</span></a>")
 
     def test_getLink_caching_locking(self):
         """Cache takes locking into account."""
@@ -47,10 +47,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
 
     def test_getLink_caching_review_state(self):
         """Cache takes 'review_state' into account."""
-        self.assertTrue(u"<a class='pretty_link state-private' "
+        self.assertTrue(u"<span class='pretty_link_content state-private'>"
                         in IPrettyLink(self.folder).getLink())
         api.content.transition(self.folder, 'publish')
-        self.assertTrue(u"<a class='pretty_link state-published' "
+        self.assertTrue(u"<span class='pretty_link_content state-published'>"
                         in IPrettyLink(self.folder).getLink())
 
     def test_getLink_server_url(self):
@@ -68,9 +68,9 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'showColors' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertTrue(adapted.showColors)
-        self.assertTrue(u"<a class='pretty_link state-private'" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'" in adapted.getLink())
         adapted.showColors = False
-        self.assertFalse(u"<a class='pretty_link state-private'" in adapted.getLink())
+        self.assertFalse(u"<span class='pretty_link_content state-private'" in adapted.getLink())
 
     def test_getLink_caching_showIcons(self):
         """Cache takes the 'showIcons' parameter into account."""
@@ -114,10 +114,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'contentValue' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertFalse(adapted.contentValue)
-        self.assertTrue(u"<span class='pretty_link_content'>Folder</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
         adapted.contentValue = 'Content value'
-        self.assertFalse(u"<span class='pretty_link_content'>Folder</span>" in adapted.getLink())
-        self.assertTrue(u"<span class='pretty_link_content'>Content value</span>" in adapted.getLink())
+        self.assertFalse(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Content value</span>" in adapted.getLink())
 
     def test_getLink_caching_tag_title(self):
         """Cache takes the 'tag_title' parameter into account."""
@@ -132,10 +132,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'maxLength' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertFalse(adapted.maxLength)
-        self.assertTrue(u"<span class='pretty_link_content'>Folder</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
         adapted.maxLength = 2
-        self.assertFalse(u"<span class='pretty_link_content'>Folder</span>" in adapted.getLink())
-        self.assertTrue(u"<span class='pretty_link_content'>Fo...</span>" in adapted.getLink())
+        self.assertFalse(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Fo...</span>" in adapted.getLink())
 
     def test_getLink_caching_target(self):
         """Cache takes the 'target' parameter into account."""
@@ -158,9 +158,9 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'additionalCSSClasses' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertFalse(adapted.additionalCSSClasses)
-        self.assertTrue(u" class='pretty_link state-private' " in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>" in adapted.getLink())
         adapted.additionalCSSClasses = ['custom_css_class']
-        self.assertTrue(u" class='pretty_link custom_css_class state-private' " in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content custom_css_class state-private'>" in adapted.getLink())
 
     def test_getLink_caching_isViewable(self):
         """Cache takes the 'isViewable' parameter into account."""
@@ -176,10 +176,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         adapted = IPrettyLink(self.folder)
         adapted.maxLength = 2
         self.assertFalse(adapted.kwargs)
-        self.assertTrue(u"<span class='pretty_link_content'>Fo...</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Fo...</span>" in adapted.getLink())
         adapted.kwargs['ellipsis'] = ' [truncated]'
-        self.assertFalse(u"<span class='pretty_link_content'>Fo...</span>" in adapted.getLink())
-        self.assertTrue(u"<span class='pretty_link_content'>Fo [truncated]</span>" in adapted.getLink())
+        self.assertFalse(u"<span class='pretty_link_content state-private'>Fo...</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Fo [truncated]</span>" in adapted.getLink())
 
     def test_getLink_caching_not_breaking_when_no_workflow(self):
         """Caching also work when element has no workflow."""
@@ -202,10 +202,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         pl = IPrettyLink(self.folder)
         self.assertEqual(
             pl.getLink(),
-            u"<a class='pretty_link state-private' title='Folder' href='http://nohost/plone/folder' "
-            u"target='_self'><span class='pretty_link_content'>Folder</span></a>")
+            u"<a class='pretty_link' title='Folder' href='http://nohost/plone/folder' "
+            u"target='_self'><span class='pretty_link_content state-private'>Folder</span></a>")
         pl.display_tag_title = False
         self.assertEqual(
             pl.getLink(),
-            u"<a class='pretty_link state-private' href='http://nohost/plone/folder' "
-            u"target='_self'><span class='pretty_link_content'>Folder</span></a>")
+            u"<a class='pretty_link' href='http://nohost/plone/folder' "
+            u"target='_self'><span class='pretty_link_content state-private'>Folder</span></a>")
