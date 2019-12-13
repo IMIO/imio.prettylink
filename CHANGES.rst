@@ -6,6 +6,9 @@ Changelog
 
 - While generating not viewable URL, avoid double blank before tag title.
   [gbastien]
+- Adapted `PrettyLinkAdapter.CSSClasses` to manage `<a>` tag CSS classes and
+  `<span>` tag CSS classes. `additionalCSSClasses` are set on the `<a>` tag.
+  [gbastien]
 
 1.15 (2019-11-26)
 -----------------

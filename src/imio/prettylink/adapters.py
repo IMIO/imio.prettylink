@@ -107,13 +107,15 @@ class PrettyLinkAdapter(object):
         icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         if self.isViewable:
             url = self._get_url()
-            return u"<a class='pretty_link'{0} href='{1}' target='{2}'>{3}" \
-                   u"<span class='pretty_link_content{4}'>{5}</span></a>" \
-                   .format(self.display_tag_title and u" title='{0}'".format(title) or '',
+            css_classes = self.CSSClasses()
+            return u"<a class='pretty_link{0}'{1} href='{2}' target='{3}'>{4}" \
+                   u"<span class='pretty_link_content{5}'>{6}</span></a>" \
+                   .format(css_classes.get('a'),
+                           self.display_tag_title and u" title='{0}'".format(title) or '',
                            url,
                            self.target,
                            icons_tag,
-                           self.CSSClasses(),
+                           css_classes.get('span'),
                            safe_unicode(content))
         else:
             # append the notViewableHelpMessage
@@ -137,11 +139,13 @@ class PrettyLinkAdapter(object):
 
     def CSSClasses(self):
         """See docstring in interfaces.py."""
-        css_classes = list(self.additionalCSSClasses)
+        css_classes = {'a': [], 'span': []}
+        css_classes['a'] += list(self.additionalCSSClasses)
         if self.showColors:
             wft = api.portal.get_tool('portal_workflow')
             try:
-                css_classes.append('state-{0}'.format(wft.getInfoFor(self.context, 'review_state')))
+                css_classes['span'].append('state-{0}'.format(
+                    wft.getInfoFor(self.context, 'review_state')))
             except WorkflowException:
                 # if self.context does not have a workflow, just pass
                 pass
@@ -150,10 +154,14 @@ class PrettyLinkAdapter(object):
         if self.showContentIcon:
             typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
             if not typeInfo.icon_expr:
-                css_classes.append('contenttype-{0}'.format(typeInfo.getId()))
-        if css_classes:
-            css_classes.insert(0, '')
-        return ' '.join(css_classes)
+                css_classes['span'].append('contenttype-{0}'.format(typeInfo.getId()))
+        if css_classes['a']:
+            css_classes['a'].insert(0, '')
+        css_classes['a'] = ' '.join(css_classes['a'])
+        if css_classes['span']:
+            css_classes['span'].insert(0, '')
+        css_classes['span'] = ' '.join(css_classes['span'])
+        return css_classes
 
     def _icons(self, **kwargs):
         """See docstring in interfaces.py."""

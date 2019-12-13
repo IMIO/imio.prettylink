@@ -160,7 +160,13 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertFalse(adapted.additionalCSSClasses)
         self.assertTrue(u"<span class='pretty_link_content state-private'>" in adapted.getLink())
         adapted.additionalCSSClasses = ['custom_css_class']
-        self.assertTrue(u"<span class='pretty_link_content custom_css_class state-private'>" in adapted.getLink())
+        # additionalCSSClasses are set on the <a> tag
+        # state related CSS class is set on the <span> tag
+        self.assertEqual(
+            adapted.getLink(),
+            u"<a class='pretty_link custom_css_class' title='Folder' "
+            u"href='http://nohost/plone/folder' target='_self'>"
+            u"<span class='pretty_link_content state-private'>Folder</span></a>")
 
     def test_getLink_caching_isViewable(self):
         """Cache takes the 'isViewable' parameter into account."""
