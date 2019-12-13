@@ -123,7 +123,7 @@ class PrettyLinkAdapter(object):
             return self.link_pattern.format(
                 self.display_tag_title and u" title='{0}'".format(title) or '',
                 icons_tag,
-                self.CSSClasses(),
+                self.CSSClasses()['span'],
                 safe_unicode(content))
 
     def _get_url(self):
