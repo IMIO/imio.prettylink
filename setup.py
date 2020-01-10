@@ -14,7 +14,7 @@ long_description = (
 
 setup(
     name='imio.prettylink',
-    version='1.16',
+    version='1.17.dev0',
     description="Manage generation of a pretty link to an element including coloration, leading icons, ...",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
