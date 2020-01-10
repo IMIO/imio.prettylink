@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.16 (unreleased)
+1.16 (2020-01-10)
 -----------------
 
 - While generating not viewable URL, avoid double blank before tag title.
