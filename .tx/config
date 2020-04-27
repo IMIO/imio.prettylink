@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[plonegov-imio.imio-prettylink-pot]
+file_filter = src/imio/prettylink/locales/<lang>/LC_MESSAGES/imio.prettylink.po
+minimum_perc = 0
+source_file = src/imio/prettylink/locales/imio.prettylink.pot
+source_lang = en
+type = PO
+
