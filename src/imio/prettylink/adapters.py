@@ -189,7 +189,7 @@ class PrettyLinkAdapter(object):
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join([u"<img title='{0}' src='{1}' />".format(
+        return ' '.join([u"<img title='{0}' src='{1}' style=\"width: 16px; height: 16px;\" />".format(
             safe_unicode(icon[1]).replace("'", "&#39;"),
             u"{0}/{1}".format(self.portal_url, icon[0]))
             for icon in icons])

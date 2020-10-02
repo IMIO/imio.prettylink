@@ -4,8 +4,9 @@ Changelog
 1.17 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Set icons `<img>` tag `width=16px` and `height=16px` to make `tooltipster`
+  happy (computed area to display depends on displayed content).
+  [gbaastien]
 
 1.16 (2020-01-10)
 -----------------
