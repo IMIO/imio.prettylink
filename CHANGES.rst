@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.17 (unreleased)
+1.17 (2020-10-06)
 -----------------
 
 - Set icons `<img>` tag `width=16px` and `height=16px` to make `tooltipster`
