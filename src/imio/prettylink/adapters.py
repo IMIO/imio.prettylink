@@ -131,7 +131,9 @@ class PrettyLinkAdapter(object):
         url = self.context.absolute_url()
         # add @@download to url if necessary, it is the case for dexterity files
         try:
-            if IPrimaryFieldInfo(self.context):
+            primary_field_info = IPrimaryFieldInfo(self.context)
+            primary_field = getattr(self.context, primary_field_info.fieldname)
+            if hasattr(primary_field, 'filename'):
                 url = u'{0}/@@download'.format(url)
         except TypeError:
             pass
