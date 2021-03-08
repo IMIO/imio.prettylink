@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.18 (unreleased)
+1.18 (2021-03-08)
 -----------------
 
 - Improve check for file when adding `@@download` in url.
