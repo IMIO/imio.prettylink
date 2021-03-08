@@ -4,8 +4,8 @@ Changelog
 1.18 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Improve check for file when adding `@@download` in url.
+  [laz, boulch]
 
 1.17 (2020-10-06)
 -----------------
