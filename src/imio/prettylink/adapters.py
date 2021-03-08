@@ -13,22 +13,24 @@ from zope.i18n import translate
 class PrettyLinkAdapter(object):
     """Adapter that manage rendering the pretty link."""
 
-    def __init__(self,
-                 context,
-                 showColors=True,
-                 showIcons=True,
-                 showContentIcon=False,
-                 showLockedIcon=True,
-                 contentValue='',
-                 display_tag_title=True,
-                 tag_title='',
-                 maxLength=0,
-                 target='_self',
-                 appendToUrl='',
-                 additionalCSSClasses=[],
-                 isViewable=True,
-                 link_pattern=u"<div class='pretty_link'{0}>{1}<span class='pretty_link_content{2}'>{3}</span></div>",
-                 **kwargs):
+    def __init__(
+        self,
+        context,
+        showColors=True,
+        showIcons=True,
+        showContentIcon=False,
+        showLockedIcon=True,
+        contentValue="",
+        display_tag_title=True,
+        tag_title="",
+        maxLength=0,
+        target="_self",
+        appendToUrl="",
+        additionalCSSClasses=[],
+        isViewable=True,
+        link_pattern=u"<div class='pretty_link'{0}>{1}<span class='pretty_link_content{2}'>{3}</span></div>",
+        **kwargs
+    ):
         self.context = context
         self.request = self.context.REQUEST
         self.portal_url = api.portal.get().absolute_url()
@@ -61,33 +63,40 @@ class PrettyLinkAdapter(object):
             if not _checkPermission(View, self.context):
                 self.isViewable = False
         self.notViewableHelpMessage = translate(
-            'can_not_access_this_element',
+            "can_not_access_this_element",
             domain="imio.prettylink",
             context=self.request,
-            default=u"<span class='discreet no_access'>(You can not access this element)</span>")
+            default=u"<span class='discreet no_access'>(You can not access this element)</span>",
+        )
         self.link_pattern = link_pattern
 
     def getLink_cachekey(method, self):
-        '''cachekey method for self.getLink.'''
+        """cachekey method for self.getLink."""
         is_locked = self._show_lock_icon()
         review_state = api.content.get_state(self.context, None)
-        server_url = self.request.get('SERVER_URL', None)
+        server_url = self.request.get("SERVER_URL", None)
         # cache by context, until modified, is_locked, state changed or server_url is different
         # + every parameters passed in __init__
-        return (self.context.UID(), self.context.modified(), is_locked, review_state, server_url,
-                self.showColors,
-                self.showIcons,
-                self.showContentIcon,
-                self.showLockedIcon,
-                self.contentValue,
-                self.tag_title,
-                self.display_tag_title,
-                self.maxLength,
-                self.target,
-                self.appendToUrl,
-                self.additionalCSSClasses,
-                self.isViewable,
-                self.kwargs)
+        return (
+            self.context.UID(),
+            self.context.modified(),
+            is_locked,
+            review_state,
+            server_url,
+            self.showColors,
+            self.showIcons,
+            self.showContentIcon,
+            self.showLockedIcon,
+            self.contentValue,
+            self.tag_title,
+            self.display_tag_title,
+            self.maxLength,
+            self.target,
+            self.appendToUrl,
+            self.additionalCSSClasses,
+            self.isViewable,
+            self.kwargs,
+        )
 
     @ram.cache(getLink_cachekey)
     def getLink(self):
@@ -96,36 +105,42 @@ class PrettyLinkAdapter(object):
 
     def _getLink(self):
         """Private method that does the link computation without the cachekey,
-           this is done so it is possible to override the cachekey."""
+        this is done so it is possible to override the cachekey."""
         completeContent = safe_unicode(self.contentValue or self.context.Title())
         content = completeContent
         if self.maxLength:
-            plone_view = self.context.restrictedTraverse('@@plone')
-            ellipsis = self.kwargs.get('ellipsis', '...')
+            plone_view = self.context.restrictedTraverse("@@plone")
+            ellipsis = self.kwargs.get("ellipsis", "...")
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
-        icons = self.showIcons and self._icons() or ''
+        icons = self.showIcons and self._icons() or ""
         title = safe_unicode(self.tag_title or completeContent.replace("'", "&#39;"))
-        icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
+        icons_tag = (
+            icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
+        )
         if self.isViewable:
             url = self._get_url()
             css_classes = self.CSSClasses()
-            return u"<a class='pretty_link{0}'{1} href='{2}' target='{3}'>{4}" \
-                   u"<span class='pretty_link_content{5}'>{6}</span></a>" \
-                   .format(css_classes.get('a'),
-                           self.display_tag_title and u" title='{0}'".format(title) or '',
-                           url,
-                           self.target,
-                           icons_tag,
-                           css_classes.get('span'),
-                           safe_unicode(content))
+            return (
+                u"<a class='pretty_link{0}'{1} href='{2}' target='{3}'>{4}"
+                u"<span class='pretty_link_content{5}'>{6}</span></a>".format(
+                    css_classes.get("a"),
+                    self.display_tag_title and u" title='{0}'".format(title) or "",
+                    url,
+                    self.target,
+                    icons_tag,
+                    css_classes.get("span"),
+                    safe_unicode(content),
+                )
+            )
         else:
             # append the notViewableHelpMessage
             content = u"{0} {1}".format(content, self.notViewableHelpMessage)
             return self.link_pattern.format(
-                self.display_tag_title and u" title='{0}'".format(title) or '',
+                self.display_tag_title and u" title='{0}'".format(title) or "",
                 icons_tag,
-                self.CSSClasses()['span'],
-                safe_unicode(content))
+                self.CSSClasses()["span"],
+                safe_unicode(content),
+            )
 
     def _get_url(self):
         """Compute the url to the content."""
@@ -134,36 +149,37 @@ class PrettyLinkAdapter(object):
         try:
             primary_field_info = IPrimaryFieldInfo(self.context)
             primary_field = getattr(self.context, primary_field_info.fieldname)
-            if base_hasattr(primary_field, 'filename'):
-                url = u'{0}/@@download'.format(url)
+            if base_hasattr(primary_field, "filename"):
+                url = u"{0}/@@download".format(url)
         except TypeError:
             pass
         return url + self.appendToUrl
 
     def CSSClasses(self):
         """See docstring in interfaces.py."""
-        css_classes = {'a': [], 'span': []}
-        css_classes['a'] += list(self.additionalCSSClasses)
+        css_classes = {"a": [], "span": []}
+        css_classes["a"] += list(self.additionalCSSClasses)
         if self.showColors:
-            wft = api.portal.get_tool('portal_workflow')
+            wft = api.portal.get_tool("portal_workflow")
             try:
-                css_classes['span'].append('state-{0}'.format(
-                    wft.getInfoFor(self.context, 'review_state')))
+                css_classes["span"].append(
+                    "state-{0}".format(wft.getInfoFor(self.context, "review_state"))
+                )
             except WorkflowException:
                 # if self.context does not have a workflow, just pass
                 pass
         # in case the contentIcon must be shown and it the icon
         # is shown by the generated contentttype-xxx class
         if self.showContentIcon:
-            typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
+            typeInfo = api.portal.get_tool("portal_types")[self.context.portal_type]
             if not typeInfo.icon_expr:
-                css_classes['span'].append('contenttype-{0}'.format(typeInfo.getId()))
-        if css_classes['a']:
-            css_classes['a'].insert(0, '')
-        css_classes['a'] = ' '.join(css_classes['a'])
-        if css_classes['span']:
-            css_classes['span'].insert(0, '')
-        css_classes['span'] = ' '.join(css_classes['span'])
+                css_classes["span"].append("contenttype-{0}".format(typeInfo.getId()))
+        if css_classes["a"]:
+            css_classes["a"].insert(0, "")
+        css_classes["a"] = " ".join(css_classes["a"])
+        if css_classes["span"]:
+            css_classes["span"].insert(0, "")
+        css_classes["span"] = " ".join(css_classes["span"])
         return css_classes
 
     def _icons(self, **kwargs):
@@ -175,27 +191,43 @@ class PrettyLinkAdapter(object):
 
         # display the icon that shows that an element is currently locked by another user
         if self._show_lock_icon():
-            icons.append(("lock_icon.png", translate("Locked", domain="plone", context=self.request)))
+            icons.append(
+                (
+                    "lock_icon.png",
+                    translate("Locked", domain="plone", context=self.request),
+                )
+            )
 
         # in case the contentIcon must be shown, the icon url is defined on the typeInfo
         if self.showContentIcon:
-            typeInfo = api.portal.get_tool('portal_types')[self.context.portal_type]
+            typeInfo = api.portal.get_tool("portal_types")[self.context.portal_type]
             if typeInfo.icon_expr:
                 # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
                 # or like string:${portal_url}/++resource++package/myContentIcon.png
                 # we skip first part
-                contentIcon = '/'.join(typeInfo.icon_expr.split('/')[1:])
-                icons.append((contentIcon,
-                              translate(typeInfo.title,
-                                        domain=typeInfo.i18n_domain,
-                                        context=self.request)))
+                contentIcon = "/".join(typeInfo.icon_expr.split("/")[1:])
+                icons.append(
+                    (
+                        contentIcon,
+                        translate(
+                            typeInfo.title,
+                            domain=typeInfo.i18n_domain,
+                            context=self.request,
+                        ),
+                    )
+                )
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
-        return ' '.join([u"<img title='{0}' src='{1}' style=\"width: 16px; height: 16px;\" />".format(
-            safe_unicode(icon[1]).replace("'", "&#39;"),
-            u"{0}/{1}".format(self.portal_url, icon[0]))
-            for icon in icons])
+        return " ".join(
+            [
+                u"<img title='{0}' src='{1}' style=\"width: 16px; height: 16px;\" />".format(
+                    safe_unicode(icon[1]).replace("'", "&#39;"),
+                    u"{0}/{1}".format(self.portal_url, icon[0]),
+                )
+                for icon in icons
+            ]
+        )
 
     def _show_lock_icon(self):
         """ """

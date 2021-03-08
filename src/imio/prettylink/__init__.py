@@ -3,7 +3,7 @@
 
 from zope.i18nmessageid import MessageFactory
 
-_ = MessageFactory('imio.prettylink')
+_ = MessageFactory("imio.prettylink")
 
 
 def initialize(context):

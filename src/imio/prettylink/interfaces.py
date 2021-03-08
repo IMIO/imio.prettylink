@@ -11,10 +11,10 @@ class IPrettyLink(Interface):
 
     def CSSClasses(self):
         """Manage CSS classes to apply to the link.
-           It depends on :
-           - additionalCSSClasses : some arbitrary classes you can define;
-           - showColors : will display a colored link depending on workflow state;
-           - showContentIcon : will apply the class that displays the content icon."""
+        It depends on :
+        - additionalCSSClasses : some arbitrary classes you can define;
+        - showColors : will display a colored link depending on workflow state;
+        - showContentIcon : will apply the class that displays the content icon."""
 
     def _icons(self):
         """Returns icons to prepend to the link."""
