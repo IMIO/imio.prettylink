@@ -4,8 +4,9 @@ Changelog
 1.19 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Used now `imio.helpers.cache.obj_modified` in `getLink_cachekey` to include
+  annotation change in modification date.
+  [sgeulette]
 
 1.18 (2021-03-08)
 -----------------

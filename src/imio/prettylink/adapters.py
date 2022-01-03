@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from imio.helpers.cache import obj_modified
 from plone import api
 from plone.memoize import ram
 from plone.rfc822.interfaces import IPrimaryFieldInfo
@@ -79,7 +80,7 @@ class PrettyLinkAdapter(object):
         # + every parameters passed in __init__
         return (
             self.context.UID(),
-            self.context.modified(),
+            obj_modified(self.context, asstring=True),
             is_locked,
             review_state,
             server_url,
