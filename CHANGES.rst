@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.19 (unreleased)
+1.19 (2022-01-12)
 -----------------
 
 - Used now `imio.helpers.cache.obj_modified` in `getLink_cachekey` to include
