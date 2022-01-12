@@ -33,6 +33,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "plone.api",
+        "imio.helpers>=0.52",
         "setuptools",
     ],
     extras_require={
