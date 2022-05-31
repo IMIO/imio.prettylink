@@ -9,6 +9,7 @@ from zope.component import getUtility
 
 
 class TestPrettyLinkAdapter(IntegrationTestCase):
+
     def invalidate_cache(self):
         cache = getUtility(ICacheChooser)("imio.prettylink.adapters.getLink")
         cache.ramcache.invalidate("imio.prettylink.adapters.getLink")
@@ -266,3 +267,20 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
             u"<a class='pretty_link' href='http://nohost/plone/folder' "
             u"target='_self'><span class='pretty_link_content state-private'>Folder</span></a>",
         )
+
+    def test_getLink_escape_dangerous_characters(self):
+        """As link is rendered, make sure we can not embed dangerous things."""
+        self.folder.setTitle('Folder"><script>alert(document.domain)</script>')
+        pl = IPrettyLink(self.folder)
+        self.assertEqual(
+            pl.getLink(),
+            u'<a class=\'pretty_link\' title=\'Folder"&gt;&lt;script&gt;alert(document.domain)'
+            u'&lt;/script&gt;\' href=\'http://nohost/plone/folder\' target=\'_self\'><span '
+            u'class=\'pretty_link_content state-private\'>Folder"&gt;&lt;script&gt;alert'
+            u'(document.domain)&lt;/script&gt;</span></a>')
+        pl.tag_title = "tag_title<>"
+        pl.contentValue = "contentValue<>"
+        self.assertEqual(
+            pl.getLink(),
+            u"<a class='pretty_link' title='tag_title&lt;&gt;' href='http://nohost/plone/folder' "
+            u"target='_self'><span class='pretty_link_content state-private'>contentValue&lt;&gt;</span></a>")

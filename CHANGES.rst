@@ -4,8 +4,8 @@ Changelog
 1.20 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Escape link content to avoid malicious behaviour.
+  [gbastien]
 
 1.19 (2022-01-12)
 -----------------

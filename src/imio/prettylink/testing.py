@@ -74,3 +74,4 @@ class IntegrationTestCase(unittest.TestCase):
         self.folder = self.portal.folder
         self.folder2 = self.portal.folder2
         self.catalog = self.portal.portal_catalog
+        self.maxDiff = None

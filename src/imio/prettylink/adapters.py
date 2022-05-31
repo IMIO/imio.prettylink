@@ -10,6 +10,8 @@ from Products.CMFPlone.utils import base_hasattr
 from Products.CMFPlone.utils import safe_unicode
 from zope.i18n import translate
 
+import cgi
+
 
 class PrettyLinkAdapter(object):
     """Adapter that manage rendering the pretty link."""
@@ -118,6 +120,10 @@ class PrettyLinkAdapter(object):
         icons_tag = (
             icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         )
+        # as link is rendered using "structure", escape various texts
+        content = cgi.escape(content)
+        title = cgi.escape(title)
+        self.target = cgi.escape(self.target)
         if self.isViewable:
             url = self._get_url()
             css_classes = self.CSSClasses()
