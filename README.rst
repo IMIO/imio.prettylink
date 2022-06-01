@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/IMIO/imio.prettylink.svg?branch=master
-   :target: https://travis-ci.org/IMIO/imio.prettylink
+.. image:: https://github.com/IMIO/imio.prettylink/actions/workflows/main.yml/badge.svg
+   :target: https://github.com/IMIO/imio.prettylink/actions/workflows/main.yml
 
 .. image:: https://coveralls.io/repos/IMIO/imio.prettylink/badge.png?branch=master
    :target: https://coveralls.io/r/IMIO/imio.prettylink?branch=master
