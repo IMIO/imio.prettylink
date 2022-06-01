@@ -121,9 +121,9 @@ class PrettyLinkAdapter(object):
             icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         )
         # as link is rendered using "structure", escape various texts
-        content = html.escape(content, quote=True)
-        title = html.escape(title, quote=True)
-        self.target = html.escape(self.target, quote=True)
+        content = html.escape(content)
+        title = html.escape(title)
+        self.target = html.escape(self.target)
         if self.isViewable:
             url = self._get_url()
             css_classes = self.CSSClasses()

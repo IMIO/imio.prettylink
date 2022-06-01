@@ -274,9 +274,9 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         pl = IPrettyLink(self.folder)
         self.assertEqual(
             pl.getLink(),
-            u'<a class=\'pretty_link\' title=\'Folder"&gt;&lt;script&gt;alert(document.domain)'
+            u'<a class=\'pretty_link\' title=\'Folder&quot;&gt;&lt;script&gt;alert(document.domain)'
             u'&lt;/script&gt;\' href=\'http://nohost/plone/folder\' target=\'_self\'><span '
-            u'class=\'pretty_link_content state-private\'>Folder"&gt;&lt;script&gt;alert'
+            u'class=\'pretty_link_content state-private\'>Folder&quot;&gt;&lt;script&gt;alert'
             u'(document.domain)&lt;/script&gt;</span></a>')
         pl.tag_title = "tag_title<>"
         pl.contentValue = "contentValue<>"
