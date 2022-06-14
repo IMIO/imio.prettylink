@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.20 (unreleased)
+1.20 (2022-06-14)
 -----------------
 
 - Escape link content to avoid malicious behaviour.
