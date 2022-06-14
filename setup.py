@@ -10,7 +10,7 @@ long_description = open("README.rst").read() + "\n" + open("CHANGES.rst").read()
 
 setup(
     name="imio.prettylink",
-    version='1.20',
+    version='1.21.dev0',
     description="Manage generation of a pretty link to an element including coloration, leading icons, ...",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
