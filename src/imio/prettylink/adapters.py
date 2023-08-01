@@ -82,7 +82,7 @@ class PrettyLinkAdapter(object):
         # + every parameters passed in __init__
         return (
             self.context.UID(),
-            obj_modified(self.context, asstring=True),
+            obj_modified(self.context, asdatetime=False),
             is_locked,
             review_state,
             server_url,

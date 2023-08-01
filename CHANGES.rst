@@ -4,8 +4,9 @@ Changelog
 1.21 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Adapted call to `imio.helpers.cache.obj_modified` as parameter `asstring=False`
+  was removed, we just use the default result type that is `float`.
+  [gbastien]
 
 1.20 (2022-06-14)
 -----------------
