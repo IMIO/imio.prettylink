@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.21 (unreleased)
+1.21 (2023-08-24)
 -----------------
 
 - Adapted call to `imio.helpers.cache.obj_modified` as parameter `asstring=False`
