@@ -4,8 +4,10 @@ Changelog
 1.22 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- When displaying `contentIcon`, use `typeInfo.Title` method instead translating
+  the `typeInfo.title` as `typeInfo.Title` manages various case where title is
+  `unicode`, `string` or else.
+  [gbastien]
 
 1.21 (2023-08-24)
 -----------------

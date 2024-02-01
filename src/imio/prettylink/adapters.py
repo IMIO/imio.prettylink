@@ -213,16 +213,7 @@ class PrettyLinkAdapter(object):
                 # or like string:${portal_url}/++resource++package/myContentIcon.png
                 # we skip first part
                 contentIcon = "/".join(typeInfo.icon_expr.split("/")[1:])
-                icons.append(
-                    (
-                        contentIcon,
-                        translate(
-                            typeInfo.title,
-                            domain=typeInfo.i18n_domain,
-                            context=self.request,
-                        ),
-                    )
-                )
+                icons.append((contentIcon, typeInfo.Title()))
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()
