@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.22 (unreleased)
+1.22 (2024-02-08)
 -----------------
 
 - When displaying `contentIcon`, use `typeInfo.Title` method instead translating
