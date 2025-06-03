@@ -44,8 +44,8 @@ class PrettyLinkAdapter(object):
         self.showLockedIcon = showLockedIcon
         # value to use for the link, if not given, object's title will be used
         self.contentValue = contentValue
-        # arbitrary tag_title, escape quotes
-        self.tag_title = tag_title.replace("'", "&#39;")
+        # arbitrary tag_title
+        self.tag_title = tag_title
         self.display_tag_title = display_tag_title
         # truncate link content to given maxLength if any
         self.maxLength = maxLength
@@ -116,13 +116,13 @@ class PrettyLinkAdapter(object):
             ellipsis = self.kwargs.get("ellipsis", "...")
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ""
-        title = safe_unicode(self.tag_title or completeContent.replace("'", "&#39;"))
+        title = safe_unicode(self.tag_title or completeContent)
         icons_tag = (
             icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         )
         # as link is rendered using "structure", escape various texts
         content = html.escape(content)
-        title = html.escape(title)
+        title = html.escape(title).replace("'", "&apos;")
         self.target = html.escape(self.target)
         if self.isViewable:
             url = self._get_url()
@@ -220,7 +220,7 @@ class PrettyLinkAdapter(object):
         return " ".join(
             [
                 u"<img title='{0}' src='{1}' style=\"width: 16px; height: 16px;\" />".format(
-                    safe_unicode(icon[1]).replace("'", "&#39;"),
+                    safe_unicode(icon[1]).replace("'", "&apos;"),
                     u"{0}/{1}".format(self.portal_url, icon[0]),
                 )
                 for icon in icons

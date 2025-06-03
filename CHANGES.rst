@@ -4,8 +4,9 @@ Changelog
 1.23 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Fixed tag title displaying `&apos;` because `html.escape` was done after
+  replacing `'` by `&apos;`, now quote management is done after `html.escape`.
+  [gbastien]
 
 1.22 (2024-02-08)
 -----------------
