@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.23 (unreleased)
+1.23 (2025-06-06)
 -----------------
 
 - Fixed tag title displaying `&apos;` because `html.escape` was done after
