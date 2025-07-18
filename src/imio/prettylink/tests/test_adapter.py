@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.prettylink.interfaces import IPrettyLink
 from imio.prettylink.testing import IntegrationTestCase
 from plone import api
@@ -96,23 +97,37 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
 
     def test_getLink_caching_showContentIcon(self):
         """Cache takes the 'showContentIcon' parameter into account."""
+        if HAS_PLONE_6_AND_MORE:
+            pretty_link_marker = "<img title='Folder' src='http://nohost/plone/folder' style=\"width: 16px; height: 16px;\" /></span><span class='pretty_link_content state-private'>Folder</span>"
+        else:
+            pretty_link_marker = u"contenttype-Folder"
         adapted = IPrettyLink(self.folder)
         self.assertTrue(adapted.showIcons)
         self.assertFalse(adapted.showContentIcon)
-        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertFalse(pretty_link_marker in adapted.getLink())
+        print(adapted.getLink())
         adapted.showContentIcon = True
-        self.assertTrue(u"contenttype-Folder" in adapted.getLink())
+        print(adapted.getLink())
+
+        # <a class='pretty_link' title='Folder' href='http://nohost/plone/folder' target='_self'><span class='pretty_link_content state-private'>Folder</span></a>
+        # <a class='pretty_link' title='Folder' href='http://nohost/plone/folder' target='_self'><span class='pretty_link_content state-private contenttype-Folder'>Folder</span></a>
+
+        # <a class='pretty_link' title='Folder' href='http://nohost/plone/folder' target='_self'><span class='pretty_link_content state-private'>Folder</span></a>
+        # <a class='pretty_link' title='Folder' href='http://nohost/plone/folder' target='_self'><span class='pretty_link_icons'><img title='Folder' src='http://nohost/plone/folder' style="width: 16px; height: 16px;" /></span><span class='pretty_link_content state-private'>Folder</span></a>
+
+        # import ipdb; ipdb.set_trace()
+        self.assertTrue(pretty_link_marker in adapted.getLink())
         typeInfo = api.portal.get_tool("portal_types")["Folder"]
         # setting an icon
         self.invalidate_cache()
         typeInfo.icon_expr = "string:${portal_url}/myContentIcon.png"
-        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertFalse(pretty_link_marker in adapted.getLink())
         self.assertTrue(u"plone/myContentIcon.png" in adapted.getLink())
         self.invalidate_cache()
         typeInfo.icon_expr = (
             "string:${portal_url}/++resource++package/myContentIcon.png"
         )
-        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertFalse(pretty_link_marker in adapted.getLink())
         self.assertTrue(
             u"plone/++resource++package/myContentIcon.png" in adapted.getLink()
         )

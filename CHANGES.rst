@@ -4,7 +4,8 @@ Changelog
 1.24 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Addd Plone 6.1 compatibility.
+  [chris-adam]
 
 
 1.23 (2025-06-06)

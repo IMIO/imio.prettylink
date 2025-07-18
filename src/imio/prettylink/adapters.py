@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from imio.helpers.cache import obj_modified
 from plone import api
+from plone.base.utils import base_hasattr
+from plone.base.utils import safe_unicode
 from plone.memoize import ram
 from plone.rfc822.interfaces import IPrimaryFieldInfo
 from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFPlone.utils import base_hasattr
-from Products.CMFPlone.utils import safe_unicode
 from zope.i18n import translate
 
 import html
