@@ -33,9 +33,9 @@ class PloneWithPrettyLinkLayer(PloneSandboxLayer):
         """Set up Plone."""
 
         if HAS_PLONE_6_AND_MORE:
-            fti = getUtility(IDexterityFTI, name='Folder')
+            fti = getUtility(IDexterityFTI, name="Folder")
             behaviors = list(fti.behaviors)
-            locking_behavior = 'plone.app.lockingbehavior.behaviors.ILocking'
+            locking_behavior = "plone.app.lockingbehavior.behaviors.ILocking"
             if locking_behavior not in behaviors:
                 behaviors.append(locking_behavior)
                 fti.behaviors = tuple(behaviors)
@@ -69,9 +69,7 @@ INTEGRATION = IntegrationTesting(bases=(FIXTURE,), name="INTEGRATION")
 FUNCTIONAL = FunctionalTesting(bases=(FIXTURE,), name="FUNCTIONAL")
 
 
-ACCEPTANCE = FunctionalTesting(
-    bases=(FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER_FIXTURE), name="ACCEPTANCE"
-)
+ACCEPTANCE = FunctionalTesting(bases=(FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER_FIXTURE), name="ACCEPTANCE")
 
 
 class IntegrationTestCase(unittest.TestCase):

@@ -10,7 +10,7 @@ long_description = open("README.rst").read() + "\n" + open("CHANGES.rst").read()
 
 setup(
     name="imio.prettylink",
-    version='1.24.dev0',
+    version="1.24.dev0",
     description="Manage generation of a pretty link to an element including coloration, leading icons, ...",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -20,6 +20,7 @@ setup(
         "Framework :: Plone :: 4.3",
         "Framework :: Plone :: 5.2",
         "Framework :: Plone :: 6.0",
+        "Framework :: Plone :: 6.1",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.8",
@@ -27,6 +28,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
     keywords="plone pretty link utils dev imio",
     author="Gauthier Bastien",
