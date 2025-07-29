@@ -6,11 +6,17 @@ from plone.rfc822.interfaces import IPrimaryFieldInfo
 from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFPlone.utils import base_hasattr
-from Products.CMFPlone.utils import safe_unicode
 from zope.i18n import translate
 
 import html
+
+
+try:
+    from plone.base.utils import base_hasattr
+    from plone.base.utils import safe_text
+except ImportError:
+    from Products.CMFPlone.utils import base_hasattr
+    from Products.CMFPlone.utils import safe_unicode as safe_text
 
 
 class PrettyLinkAdapter(object):
@@ -109,17 +115,15 @@ class PrettyLinkAdapter(object):
     def _getLink(self):
         """Private method that does the link computation without the cachekey,
         this is done so it is possible to override the cachekey."""
-        completeContent = safe_unicode(self.contentValue or self.context.Title())
+        completeContent = safe_text(self.contentValue or self.context.Title())
         content = completeContent
         if self.maxLength:
             plone_view = self.context.restrictedTraverse("@@plone")
             ellipsis = self.kwargs.get("ellipsis", "...")
             content = plone_view.cropText(completeContent, self.maxLength, ellipsis)
         icons = self.showIcons and self._icons() or ""
-        title = safe_unicode(self.tag_title or completeContent)
-        icons_tag = (
-            icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
-        )
+        title = safe_text(self.tag_title or completeContent)
+        icons_tag = icons and u"<span class='pretty_link_icons'>{0}</span>".format(icons) or ""
         # as link is rendered using "structure", escape various texts
         content = html.escape(content)
         title = html.escape(title).replace("'", "&apos;")
@@ -136,7 +140,7 @@ class PrettyLinkAdapter(object):
                     self.target,
                     icons_tag,
                     css_classes.get("span"),
-                    safe_unicode(content),
+                    safe_text(content),
                 )
             )
         else:
@@ -146,7 +150,7 @@ class PrettyLinkAdapter(object):
                 self.display_tag_title and u" title='{0}'".format(title) or "",
                 icons_tag,
                 self.CSSClasses()["span"],
-                safe_unicode(content),
+                safe_text(content),
             )
 
     def _get_url(self):
@@ -169,9 +173,7 @@ class PrettyLinkAdapter(object):
         if self.showColors:
             wft = api.portal.get_tool("portal_workflow")
             try:
-                css_classes["span"].append(
-                    "state-{0}".format(wft.getInfoFor(self.context, "review_state"))
-                )
+                css_classes["span"].append("state-{0}".format(wft.getInfoFor(self.context, "review_state")))
             except WorkflowException:
                 # if self.context does not have a workflow, just pass
                 pass
@@ -220,7 +222,7 @@ class PrettyLinkAdapter(object):
         return " ".join(
             [
                 u"<img title='{0}' src='{1}' style=\"width: 16px; height: 16px;\" />".format(
-                    safe_unicode(icon[1]).replace("'", "&apos;"),
+                    safe_text(icon[1]).replace("'", "&apos;"),
                     u"{0}/{1}".format(self.portal_url, icon[0]),
                 )
                 for icon in icons

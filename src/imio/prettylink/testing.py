@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Base module for unittesting."""
 
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -10,7 +11,9 @@ from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
+from plone.dexterity.interfaces import IDexterityFTI
 from plone.testing import z2
+from zope.component import getUtility
 
 import imio.prettylink
 import unittest
@@ -28,6 +31,14 @@ class PloneWithPrettyLinkLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
+
+        if HAS_PLONE_6_AND_MORE:
+            fti = getUtility(IDexterityFTI, name="Folder")
+            behaviors = list(fti.behaviors)
+            locking_behavior = "plone.app.lockingbehavior.behaviors.ILocking"
+            if locking_behavior not in behaviors:
+                behaviors.append(locking_behavior)
+                fti.behaviors = tuple(behaviors)
 
         # Login and create some test content
         setRoles(portal, TEST_USER_ID, ["Manager"])
@@ -58,9 +69,7 @@ INTEGRATION = IntegrationTesting(bases=(FIXTURE,), name="INTEGRATION")
 FUNCTIONAL = FunctionalTesting(bases=(FIXTURE,), name="FUNCTIONAL")
 
 
-ACCEPTANCE = FunctionalTesting(
-    bases=(FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER_FIXTURE), name="ACCEPTANCE"
-)
+ACCEPTANCE = FunctionalTesting(bases=(FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER_FIXTURE), name="ACCEPTANCE")
 
 
 class IntegrationTestCase(unittest.TestCase):

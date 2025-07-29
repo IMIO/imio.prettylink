@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from imio.helpers import HAS_PLONE_6_AND_MORE
 from imio.prettylink.interfaces import IPrettyLink
 from imio.prettylink.testing import IntegrationTestCase
 from plone import api
@@ -9,7 +10,6 @@ from zope.component import getUtility
 
 
 class TestPrettyLinkAdapter(IntegrationTestCase):
-
     def invalidate_cache(self):
         cache = getUtility(ICacheChooser)("imio.prettylink.adapters.getLink")
         cache.ramcache.invalidate("imio.prettylink.adapters.getLink")
@@ -26,9 +26,7 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertTrue(" title='Folder' " in IPrettyLink(self.folder).getLink())
         # notify modified so cache is invalidated
         self.folder.notifyModified()
-        self.assertTrue(
-            " title='Folder other title' " in IPrettyLink(self.folder).getLink()
-        )
+        self.assertTrue(" title='Folder other title' " in IPrettyLink(self.folder).getLink())
 
     def test_getLink_caching_context(self):
         """Cached by context so getLink on self.folder2 is correct."""
@@ -52,15 +50,9 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
 
     def test_getLink_caching_review_state(self):
         """Cache takes 'review_state' into account."""
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>"
-            in IPrettyLink(self.folder).getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-private'>" in IPrettyLink(self.folder).getLink())
         api.content.transition(self.folder, "publish")
-        self.assertTrue(
-            u"<span class='pretty_link_content state-published'>"
-            in IPrettyLink(self.folder).getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-published'>" in IPrettyLink(self.folder).getLink())
 
     def test_getLink_server_url(self):
         """Cache takes portal url (SERVER_URL) into account,
@@ -77,13 +69,9 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'showColors' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertTrue(adapted.showColors)
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'" in adapted.getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-private'" in adapted.getLink())
         adapted.showColors = False
-        self.assertFalse(
-            u"<span class='pretty_link_content state-private'" in adapted.getLink()
-        )
+        self.assertFalse(u"<span class='pretty_link_content state-private'" in adapted.getLink())
 
     def test_getLink_caching_showIcons(self):
         """Cache takes the 'showIcons' parameter into account."""
@@ -96,26 +84,26 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
 
     def test_getLink_caching_showContentIcon(self):
         """Cache takes the 'showContentIcon' parameter into account."""
+        if HAS_PLONE_6_AND_MORE:
+            pretty_link_marker = "<img title='Folder' src='http://nohost/plone/folder' style=\"width: 16px; height: 16px;\" /></span><span class='pretty_link_content state-private'>Folder</span>"
+        else:
+            pretty_link_marker = u"contenttype-Folder"
         adapted = IPrettyLink(self.folder)
         self.assertTrue(adapted.showIcons)
         self.assertFalse(adapted.showContentIcon)
-        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertFalse(pretty_link_marker in adapted.getLink())
         adapted.showContentIcon = True
-        self.assertTrue(u"contenttype-Folder" in adapted.getLink())
+        self.assertTrue(pretty_link_marker in adapted.getLink())
         typeInfo = api.portal.get_tool("portal_types")["Folder"]
         # setting an icon
         self.invalidate_cache()
         typeInfo.icon_expr = "string:${portal_url}/myContentIcon.png"
-        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
+        self.assertFalse(pretty_link_marker in adapted.getLink())
         self.assertTrue(u"plone/myContentIcon.png" in adapted.getLink())
         self.invalidate_cache()
-        typeInfo.icon_expr = (
-            "string:${portal_url}/++resource++package/myContentIcon.png"
-        )
-        self.assertFalse(u"contenttype-Folder" in adapted.getLink())
-        self.assertTrue(
-            u"plone/++resource++package/myContentIcon.png" in adapted.getLink()
-        )
+        typeInfo.icon_expr = "string:${portal_url}/++resource++package/myContentIcon.png"
+        self.assertFalse(pretty_link_marker in adapted.getLink())
+        self.assertTrue(u"plone/++resource++package/myContentIcon.png" in adapted.getLink())
         self.invalidate_cache()
         # when typeInfo's title contains special characters
         typeInfo.title = u"héhé"
@@ -134,19 +122,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'contentValue' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertFalse(adapted.contentValue)
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>Folder</span>"
-            in adapted.getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
         adapted.contentValue = "Content value"
-        self.assertFalse(
-            u"<span class='pretty_link_content state-private'>Folder</span>"
-            in adapted.getLink()
-        )
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>Content value</span>"
-            in adapted.getLink()
-        )
+        self.assertFalse(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Content value</span>" in adapted.getLink())
 
     def test_getLink_caching_tag_title(self):
         """Cache takes the 'tag_title' parameter into account."""
@@ -161,19 +140,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         """Cache takes the 'maxLength' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertFalse(adapted.maxLength)
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>Folder</span>"
-            in adapted.getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
         adapted.maxLength = 2
-        self.assertFalse(
-            u"<span class='pretty_link_content state-private'>Folder</span>"
-            in adapted.getLink()
-        )
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>Fo...</span>"
-            in adapted.getLink()
-        )
+        self.assertFalse(u"<span class='pretty_link_content state-private'>Folder</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Fo...</span>" in adapted.getLink())
 
     def test_getLink_caching_target(self):
         """Cache takes the 'target' parameter into account."""
@@ -190,17 +160,13 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertFalse(adapted.appendToUrl)
         self.assertTrue(u" href='http://nohost/plone/folder' " in adapted.getLink())
         adapted.appendToUrl = "/@@append_to_url"
-        self.assertTrue(
-            u" href='http://nohost/plone/folder/@@append_to_url' " in adapted.getLink()
-        )
+        self.assertTrue(u" href='http://nohost/plone/folder/@@append_to_url' " in adapted.getLink())
 
     def test_getLink_caching_additionalCSSClasses(self):
         """Cache takes the 'additionalCSSClasses' parameter into account."""
         adapted = IPrettyLink(self.folder)
         self.assertFalse(adapted.additionalCSSClasses)
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>" in adapted.getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-private'>" in adapted.getLink())
         adapted.additionalCSSClasses = ["custom_css_class"]
         # additionalCSSClasses are set on the <a> tag
         # state related CSS class is set on the <span> tag
@@ -225,19 +191,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         adapted = IPrettyLink(self.folder)
         adapted.maxLength = 2
         self.assertFalse(adapted.kwargs)
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>Fo...</span>"
-            in adapted.getLink()
-        )
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Fo...</span>" in adapted.getLink())
         adapted.kwargs["ellipsis"] = " [truncated]"
-        self.assertFalse(
-            u"<span class='pretty_link_content state-private'>Fo...</span>"
-            in adapted.getLink()
-        )
-        self.assertTrue(
-            u"<span class='pretty_link_content state-private'>Fo [truncated]</span>"
-            in adapted.getLink()
-        )
+        self.assertFalse(u"<span class='pretty_link_content state-private'>Fo...</span>" in adapted.getLink())
+        self.assertTrue(u"<span class='pretty_link_content state-private'>Fo [truncated]</span>" in adapted.getLink())
 
     def test_getLink_caching_not_breaking_when_no_workflow(self):
         """Caching also work when element has no workflow."""
@@ -277,13 +234,15 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         pl = IPrettyLink(self.folder)
         self.assertEqual(
             pl.getLink(),
-            u'<a class=\'pretty_link\' title=\'Folder&quot;&gt;&lt;script&gt;alert(document.domain)'
-            u'&lt;/script&gt;\' href=\'http://nohost/plone/folder\' target=\'_self\'><span '
-            u'class=\'pretty_link_content state-private\'>Folder&quot;&gt;&lt;script&gt;alert'
-            u'(document.domain)&lt;/script&gt;</span></a>')
+            u"<a class='pretty_link' title='Folder&quot;&gt;&lt;script&gt;alert(document.domain)"
+            u"&lt;/script&gt;' href='http://nohost/plone/folder' target='_self'><span "
+            u"class='pretty_link_content state-private'>Folder&quot;&gt;&lt;script&gt;alert"
+            u"(document.domain)&lt;/script&gt;</span></a>",
+        )
         pl.tag_title = "tag_title<>"
         pl.contentValue = "contentValue<>"
         self.assertEqual(
             pl.getLink(),
             u"<a class='pretty_link' title='tag_title&lt;&gt;' href='http://nohost/plone/folder' "
-            u"target='_self'><span class='pretty_link_content state-private'>contentValue&lt;&gt;</span></a>")
+            u"target='_self'><span class='pretty_link_content state-private'>contentValue&lt;&gt;</span></a>",
+        )

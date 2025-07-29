@@ -1,16 +1,22 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="imio.prettylink">
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="imio.prettylink"
+    >
 
-    <five:registerPackage package="." initialize=".initialize" />
+  <five:registerPackage
+      package="."
+      initialize=".initialize"
+      />
 
-    <i18n:registerTranslations directory="locales" />
+  <i18n:registerTranslations directory="locales" />
 
-    <adapter for="OFS.interfaces.IItem"
-             factory=".adapters.PrettyLinkAdapter"
-             provides=".interfaces.IPrettyLink" />
+  <adapter
+      factory=".adapters.PrettyLinkAdapter"
+      provides=".interfaces.IPrettyLink"
+      for="OFS.interfaces.IItem"
+      />
 
 </configure>
