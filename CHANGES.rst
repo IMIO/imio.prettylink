@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.24 (unreleased)
+1.24 (2026-01-05)
 -----------------
 
 - Addd Plone 6.1 compatibility.
