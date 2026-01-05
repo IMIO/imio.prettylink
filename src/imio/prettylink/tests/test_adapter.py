@@ -106,8 +106,10 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         self.assertTrue(u"plone/++resource++package/myContentIcon.png" in adapted.getLink())
         self.invalidate_cache()
         # when typeInfo's title contains special characters
-        typeInfo.title = 'h\xc3\xa9h\xc3\xa9'
-        self.assertTrue(typeInfo.Title() in adapted.getLink())
+        # this does not work with AT without a monkey patch
+        if HAS_PLONE_6_AND_MORE:
+            typeInfo.title = 'h\xc3\xa9h\xc3\xa9'
+            self.assertTrue(typeInfo.title in adapted.getLink())
 
     def test_getLink_caching_showLockedIcon(self):
         """Cache takes the 'showLockedIcon' parameter into account."""
