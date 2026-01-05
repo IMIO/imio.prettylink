@@ -7,6 +7,7 @@ from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
 from zope.i18n import translate
+from zope.i18nmessageid import Message
 
 import html
 
@@ -180,9 +181,9 @@ class PrettyLinkAdapter(object):
         # in case the contentIcon must be shown and it the icon
         # is shown by the generated contentttype-xxx class
         if self.showContentIcon:
-            typeInfo = api.portal.get_tool("portal_types")[self.context.portal_type]
-            if not typeInfo.icon_expr:
-                css_classes["span"].append("contenttype-{0}".format(typeInfo.getId()))
+            type_info = api.portal.get_tool("portal_types")[self.context.portal_type]
+            if not type_info.icon_expr:
+                css_classes["span"].append("contenttype-{0}".format(type_info.getId()))
         if css_classes["a"]:
             css_classes["a"].insert(0, "")
         css_classes["a"] = " ".join(css_classes["a"])
@@ -207,15 +208,20 @@ class PrettyLinkAdapter(object):
                 )
             )
 
-        # in case the contentIcon must be shown, the icon url is defined on the typeInfo
+        # in case the contentIcon must be shown, the icon url is defined on the type_info
         if self.showContentIcon:
-            typeInfo = api.portal.get_tool("portal_types")[self.context.portal_type]
-            if typeInfo.icon_expr:
+            type_info = api.portal.get_tool("portal_types")[self.context.portal_type]
+            if type_info.icon_expr:
                 # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
                 # or like string:${portal_url}/++resource++package/myContentIcon.png
                 # we skip first part
-                contentIcon = "/".join(typeInfo.icon_expr.split("/")[1:])
-                icons.append((contentIcon, typeInfo.Title()))
+                contentIcon = "/".join(type_info.icon_expr.split("/")[1:])
+                # title will return an i18n msgid or a string if portal_type
+                # does not have a i18n_domain
+                type_info_title = type_info.Title()
+                if isinstance(type_info_title, Message):
+                    type_info_title = translate(type_info_title, context=self.request)
+                icons.append((contentIcon, type_info_title))
 
         # manage icons we want to be displayed after managed icons
         icons = icons + self._trailingIcons()

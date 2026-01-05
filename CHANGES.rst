@@ -6,7 +6,9 @@ Changelog
 
 - Addd Plone 6.1 compatibility.
   [chris-adam]
-
+- Make sure `contentIcon` title HTML attribute contains translated version
+  of portal_type's title.
+  [gbastien]
 
 1.23 (2025-06-06)
 -----------------
