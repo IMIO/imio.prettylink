@@ -4,8 +4,8 @@ Changelog
 1.25 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- Use `zc.buildout=3.4`.
+  [gbastien]
 
 1.24 (2026-01-05)
 -----------------
