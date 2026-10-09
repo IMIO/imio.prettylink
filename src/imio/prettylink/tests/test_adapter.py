@@ -6,6 +6,9 @@ from imio.prettylink.testing import IntegrationTestCase
 from plone import api
 from plone.locking.interfaces import ILockable
 from plone.memoize.interfaces import ICacheChooser
+from plone.registry import field
+from plone.registry import Record
+from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 
 
@@ -85,7 +88,7 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
     def test_getLink_caching_showContentIcon(self):
         """Cache takes the 'showContentIcon' parameter into account."""
         if HAS_PLONE_6_AND_MORE:
-            pretty_link_marker = "<img title='Folder' src='http://nohost/plone/folder' style=\"width: 16px; height: 16px;\" /></span><span class='pretty_link_content state-private'>Folder</span>"
+            pretty_link_marker = "<img title='Folder' src='http://nohost/plone/++plone++bootstrap-icons/folder.svg' style=\"width: 16px; height: 16px;\" /></span><span class='pretty_link_content state-private'>Folder</span>"
         else:
             pretty_link_marker = u"contenttype-Folder"
         adapted = IPrettyLink(self.folder)
@@ -110,6 +113,29 @@ class TestPrettyLinkAdapter(IntegrationTestCase):
         if HAS_PLONE_6_AND_MORE:
             typeInfo.title = 'h\xc3\xa9h\xc3\xa9'
             self.assertTrue(typeInfo.title in adapted.getLink())
+
+    def test_getLink_showContentIcon_icon_expr(self):
+        """The content icon is computed from the type_info icon_expr."""
+        adapted = IPrettyLink(self.folder)
+        adapted.showContentIcon = True
+        typeInfo = api.portal.get_tool("portal_types")["Folder"]
+        # Plone 6 icon name, registered like collective.contact.core does
+        if HAS_PLONE_6_AND_MORE:
+            getUtility(IRegistry).records["plone.icon.contenttype/organization"] = Record(
+                field.TextLine(), u"++plone++bootstrap-icons/diagram-3-fill.svg"
+            )
+            typeInfo.icon_expr = "string:contenttype/organization"
+            self.assertIn(u"src='http://nohost/plone/++plone++bootstrap-icons/diagram-3-fill.svg'", adapted.getLink())
+            self.invalidate_cache()
+        # classic file icon
+        typeInfo.icon_expr = "string:${portal_url}/organization_icon.png"
+        self.assertIn(u"src='http://nohost/plone/organization_icon.png'", adapted.getLink())
+        self.invalidate_cache()
+        # no icon, a contenttype CSS class is used
+        typeInfo.icon_expr = ""
+        link = adapted.getLink()
+        self.assertNotIn(u"<img", link)
+        self.assertIn(u"contenttype-Folder", link)
 
     def test_getLink_caching_showLockedIcon(self):
         """Cache takes the 'showLockedIcon' parameter into account."""

@@ -6,6 +6,10 @@ Changelog
 
 - Use `zc.buildout=3.4`.
   [gbastien]
+- Fixed content icon when the portal_type `icon_expr` is a Plone 6 icon name
+  (`string:contenttype/organization`): it is resolved by the `@@iconresolver`.
+  Added Plone 6.2 test config.
+  [chris-adam]
 
 1.24 (2026-01-05)
 -----------------
