@@ -4,7 +4,7 @@
 # The original Makefile can be found on https://github.com/IMIO/scripts-buildout
 
 SHELL=/bin/bash
-plones=4.3 5.2 6.0 6.1
+plones=4.3 5.2 6.0 6.1 6.2
 b_o=
 old_plone=$(shell [ -e .plone-version ] && cat .plone-version)
 
@@ -32,7 +32,7 @@ endif
 ifeq ($(plone),6.0)
   python=3.10
 endif
-ifeq ($(plone),6.1)
+ifneq (,$(filter $(plone),6.1 6.2))
   python=3.13
 endif
 endif
@@ -44,7 +44,7 @@ help:
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 .python-version:  ## Setups pyenv version
-	@pyenv local `pyenv versions |grep "  $(python)" |tail -1 |xargs`
+	@pyenv local `pyenv versions --bare |grep "^$(python)" |tail -1`
 	@echo "Local pyenv version is `cat .python-version`"
 	@ if [[ `pyenv which virtualenv` != `pyenv prefix`* ]] ; then echo "You need to install virtualenv in `cat .python-version` pyenv python (pip install virtualenv)"; exit 1; fi
 
