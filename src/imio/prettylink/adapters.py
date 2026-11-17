@@ -6,6 +6,7 @@ from plone.rfc822.interfaces import IPrimaryFieldInfo
 from Products.CMFCore.permissions import View
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.WorkflowCore import WorkflowException
+from zope.component import queryMultiAdapter
 from zope.i18n import translate
 from zope.i18nmessageid import Message
 
@@ -211,11 +212,19 @@ class PrettyLinkAdapter(object):
         # in case the contentIcon must be shown, the icon url is defined on the type_info
         if self.showContentIcon:
             type_info = api.portal.get_tool("portal_types")[self.context.portal_type]
-            if type_info.icon_expr:
-                # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
-                # or like string:${portal_url}/++resource++package/myContentIcon.png
-                # we skip first part
-                contentIcon = "/".join(type_info.icon_expr.split("/")[1:])
+            icon_expr = type_info.icon_expr
+            if icon_expr:
+                # Plone 6 icon name like string:contenttype/folder, resolved by the iconresolver
+                iconresolver = "portal_url" not in icon_expr and queryMultiAdapter(
+                    (self.context, self.request), name="iconresolver"
+                )
+                if iconresolver:
+                    contentIcon = iconresolver.lookup(icon_expr.split(":", 1)[-1])
+                else:
+                    # we assume that stored icon_expr is like string:${portal_url}/myContentIcon.png
+                    # or like string:${portal_url}/++resource++package/myContentIcon.png
+                    # we skip first part
+                    contentIcon = "/".join(icon_expr.split("/")[1:])
                 # title will return an i18n msgid or a string if portal_type
                 # does not have a i18n_domain
                 type_info_title = type_info.Title()
